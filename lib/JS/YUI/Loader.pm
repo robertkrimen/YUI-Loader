@@ -17,15 +17,100 @@ our $VERSION = '0.01';
 
 use constant LATEST_YUI_VERSION => "2.5.1";
 
-use Path::Class;
 use Moose;
-use LWP::UserAgent;
-my $agent = LWP::UserAgent->new;
-use URI;
 
 has manifest => qw/is ro required 1 lazy 1/, default => sub {
     return JS::YUI::Loader::Manifest->new;
 };
+
+has catalog => qw/is ro required 1 lazy 1/, default => sub {
+    return JS::YUI::Loader::Catalog->new;
+};
+
+has source => qw/is ro required 1/;
+
+has cache => qw/is ro/;
+
+sub BUILD {
+    my $self = shift;
+    my $given = shift;
+
+    if (my $cache = $given->{cache}) {
+#        my $cache_class
+#        my %cache_new;
+        my $_cache;
+        if (ref $cache eq "ARRAY") {
+            require JS::YUI::Loader::Cache::URI;
+            my ($uri, $dir) = @$cache;
+            $_cache = JS::YUI::Loader::Cache::URI->new(loader => $self, uri => $uri, dir => $dir);
+        }
+        elsif (ref $cache eq "Path::Resource") {
+            require JS::YUI::Loader::Cache::URI;
+            $_cache = JS::YUI::Loader::Cache::URI->new(loader => $self, rsc => $cache);
+        }
+        else {
+            require JS::YUI::Loader::Cache::Dir;
+            $_cache = JS::YUI::Loader::Cache::Dir->new(loader => $self, dir => $cache);
+        }
+        $self->{cache} = $_cache;
+    }
+}
+
+sub new_from_yui_host {
+    require JS::YUI::Loader::Source::YUIHost;
+
+    my $class = shift;
+    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    my $source = JS::YUI::Loader::Source::YUIHost->new(%source);
+
+    return $class->new(source => $source, %$given);
+}
+
+sub new_from_yui_dir {
+    require JS::YUI::Loader::Source::YUIDir;
+
+    my $class = shift;
+    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    my $source = JS::YUI::Loader::Source::YUIDir->new(%source);
+
+    return $class->new(source => $source, %$given);
+}
+
+sub new_from_dir {
+    require JS::YUI::Loader::Source::Dir;
+
+    my $class = shift;
+    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    my $source = JS::YUI::Loader::Source::Dir->new(%source);
+
+    return $class->new(source => $source, %$given);
+}
+
+sub new_from_uri {
+    require JS::YUI::Loader::Source::URI;
+
+    my $class = shift;
+    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    my $source = JS::YUI::Loader::Source::URI->new(%source);
+
+    return $class->new(source => $source, %$given);
+}
+
+1;
 
 =head1 AUTHOR
 

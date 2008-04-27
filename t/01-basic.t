@@ -52,4 +52,8 @@ is($source_yuidir->file("yuitest", "min"), "yui/build/yuitest/yuitest-min.js");
 is($source_yuidir->file("imagecropper"), "yui/build/imagecropper/imagecropper-beta.js");
 is($source_yuidir->file("imagecropper", "min"), "yui/build/imagecropper/imagecropper-beta-min.js");
 
+my $loader = JS::YUI::Loader->new_from_yui_host(cache => ".");
+
+is($loader->cache->file("yuitest", "min"), "min");
+
 1;

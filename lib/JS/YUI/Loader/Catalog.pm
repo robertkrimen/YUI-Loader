@@ -3,6 +3,7 @@ package JS::YUI::Loader::Catalog;
 use strict;
 use warnings;
 
+use Moose;
 use JSON;
 use Scalar::Util qw/blessed/;
 use JS::YUI::Loader::Item;
@@ -344,22 +345,22 @@ _END_
 }
 
 sub names {
-    my $class = shift;
-    return keys %{ $class->catalog };
+    my $self = shift;
+    return keys %{ $self->catalog };
 }
 
 sub items {
-    my $class = shift;
-    return values %{ $class->catalog };
+    my $self = shift;
+    return values %{ $self->catalog };
 }
 
 sub item {
-    my $class = shift;
+    my $self = shift;
     my $name = shift;
 
     croak "Can't look up an item without a name" unless $name;
     return $name if blessed $name && $name->isa("JS::YUI::Loader::Item");
-    croak "Couldn't find item for name \"$name\"" unless my $item = $class->catalog->{$name};
+    croak "Couldn't find item for name \"$name\"" unless my $item = $self->catalog->{$name};
     return $item;
  
 }

@@ -3,6 +3,7 @@ package JS::YUI::Loader::Source::YUIHost;
 use Moose;
 extends qw/JS::YUI::Loader::Source::Remote/;
 use JS::YUI::Loader;
+use URI;
 
 has version => qw/is ro required 1 lazy 1/, default => JS::YUI::Loader->LATEST_YUI_VERSION;
 has base => qw/is ro/, default => "http://yui.yahooapis.com/%v/build";

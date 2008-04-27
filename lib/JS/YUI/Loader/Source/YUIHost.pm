@@ -1,0 +1,31 @@
+package JS::YUI::Loader::Source::YUIHost;
+
+use Moose;
+extends qw/JS::YUI::Loader::Source::Remote/;
+use JS::YUI::Loader;
+
+has version => qw/is ro required 1 lazy 1/, default => JS::YUI::Loader->LATEST_YUI_VERSION;
+has base => qw/is ro/, default => "http://yui.yahooapis.com/%v/build";
+
+sub BUILD {
+    my $self = shift;
+    my $given = shift;
+    my $base = $self->base;
+    my $version = $self->version || 0;
+    $version = JS::YUI::Loader->LATEST_YUI_VERSION if $version eq 0;
+    $base =~ s/%v/$version/g;
+    $base =~ s/%%/%/g;
+    $base = URI->new("$base") unless blessed $base && $base->isa("URI");
+    $self->{base} = $base;
+}
+
+sub uri {
+    my $self = shift;
+    my $item = shift;
+    my $filter = shift;
+
+    $item = $self->catalog->item($item);
+    return $item->path_uri($self->base, $filter);
+}
+
+1;

@@ -1,7 +1,7 @@
 package JS::YUI::Loader::Source::YUIDir;
 
 use Moose;
-extends qw/JS::YUI::Loader::Source::Local/;
+extends qw/JS::YUI::Loader::Source/;
 
 use JS::YUI::Loader;
 
@@ -19,13 +19,13 @@ sub BUILD {
     $self->{base} = Path::Class::Dir->new($base);
 }
 
-sub file {
+override file => sub {
     my $self = shift;
     my $item = shift;
     my $filter = shift;
 
     $item = $self->catalog->item($item);
     return $self->base->file($item->path($filter));
-}
+};
 
 1;

@@ -6,6 +6,7 @@ use warnings;
 use Moose;
 use JSON;
 use Scalar::Util qw/blessed/;
+use JS::YUI::Loader::Entry;
 use JS::YUI::Loader::Item;
 use Carp::Clan;
 
@@ -330,9 +331,9 @@ _END_
 
     my %catalog;
     my %dependency_graph;
-    for my $item (keys %$catalog) {
-        $dependency_graph{$item} = [ @{ $catalog->{$item}->{requires} || [] } ];
-        $catalog{$item} = JS::YUI::Loader::Item->parse($item => $catalog->{$item});
+    for my $entry (keys %$catalog) {
+        $dependency_graph{$entry} = [ @{ $catalog->{$entry}->{requires} || [] } ];
+        $catalog{$entry} = JS::YUI::Loader::Entry->parse($entry => $catalog->{$entry});
     }
 
     sub catalog {
@@ -344,25 +345,43 @@ _END_
     }
 }
 
-sub names {
+sub name_list {
     my $self = shift;
     return keys %{ $self->catalog };
 }
 
-sub items {
+sub entry_list {
     my $self = shift;
     return values %{ $self->catalog };
+}
+
+sub entry {
+    my $self = shift;
+    my $name = shift;
+
+    croak "Can't look up an entry without a name" unless $name;
+    return $name if blessed $name && $name->isa("JS::YUI::Loader::Entry");
+    croak "Couldn't find entry for name \"$name\"" unless my $entry = $self->catalog->{$name};
+    return $entry;
+ 
 }
 
 sub item {
     my $self = shift;
     my $name = shift;
-
-    croak "Can't look up an item without a name" unless $name;
+    croak "Can't make an item without a name" unless $name;
     return $name if blessed $name && $name->isa("JS::YUI::Loader::Item");
-    croak "Couldn't find item for name \"$name\"" unless my $item = $self->catalog->{$name};
+    my $filter;
+    if (ref $name eq "ARRAY") {
+        ($name, $filter) = @$name;
+    }
+    else {
+        if      ($name =~ s/-min$//i) { $filter = "min" }
+        elsif   ($name =~ s/-debug$//i) { $filter = "debug" }
+    }
+    my $entry = $self->entry($name);
+    my $item = JS::YUI::Loader::Item->new(entry => $entry, filter => $filter);
     return $item;
- 
 }
 
 1;

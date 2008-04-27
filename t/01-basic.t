@@ -5,6 +5,10 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
+ok(1)
+
+__END__
+
 use JS::YUI::Loader::Manifest;
 use JS::YUI::Loader::Catalog;
 use JS::YUI::Loader::Source::YUIHost;

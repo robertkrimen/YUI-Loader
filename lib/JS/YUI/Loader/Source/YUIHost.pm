@@ -1,7 +1,7 @@
 package JS::YUI::Loader::Source::YUIHost;
 
 use Moose;
-extends qw/JS::YUI::Loader::Source::Remote/;
+extends qw/JS::YUI::Loader::Source/;
 use JS::YUI::Loader;
 use URI;
 
@@ -20,13 +20,13 @@ sub BUILD {
     $self->{base} = $base;
 }
 
-sub uri {
+override uri => sub {
     my $self = shift;
     my $item = shift;
     my $filter = shift;
 
     $item = $self->catalog->item($item);
     return $item->path_uri($self->base, $filter);
-}
+};
 
 1;

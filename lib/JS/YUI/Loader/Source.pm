@@ -2,10 +2,14 @@ package JS::YUI::Loader::Source;
 
 use Moose;
 
-has loader => qw/is ro required 1 isa JS::YUI::Loader weak_ref 1/;
+has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog/;
 
-sub catalog {
-    return shift->loader->catalog;
+sub uri {
+    return;
+}
+
+sub file {
+    return;
 }
 
 1;

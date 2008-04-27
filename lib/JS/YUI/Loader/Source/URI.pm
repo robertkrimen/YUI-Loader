@@ -1,7 +1,7 @@
 package JS::YUI::Loader::Source::URI;
 
 use Moose;
-extends qw/JS::YUI::Loader::Source::Remote/;
+extends qw/JS::YUI::Loader::Source/;
 
 use URI;
 use Scalar::Util qw/blessed/;
@@ -15,13 +15,13 @@ sub BUILD {
     $base = URI->new("$base") unless blessed $base && $base->isa("URI");
 }
 
-sub uri {
+override uri => sub {
     my $self = shift;
     my $item = shift;
     my $filter = shift;
 
     $item = $self->catalog->item($item);
     return $item->file_uri($self->base, $filter);
-}
+};
 
 1;

@@ -1,11 +1,29 @@
-package JS::YUI::Loader::Item;
+package JS::YUI::Loader::Entry;
 
 use Moose;
 use Path::Abstract;
 use Carp;
 
-has filter => qw/is ro/;
-has entry => qw/is ro required 1 isa JS::YUI::Loader::Entry/, handles => [qw/name/];
+has name => qw/is ro required 1 isa Str/;
+has type => qw/is ro required 1 isa Str/;
+has path => qw/is ro required 1 isa Path::Abstract/;
+has file => qw/is ro required 1 isa Str lazy 1/, default => sub {
+    my $self = shift;
+    $self->path->last;
+};
+
+sub parse {
+    my $class = shift;
+    my $name = shift;
+    my $given = shift;
+    my $path = $given->{path};
+    $path =~ s/-min\b//;
+    return $class->new(name => $name, type => $given->{type}, path => Path::Abstract->new($path));
+}
+
+1;
+
+__END__
 
 sub _filter ($$) {
     my $path = shift;
@@ -30,12 +48,14 @@ sub _filter_path ($$) {
 
 sub file {
     my $self = shift;
-    return _filter_path $self->entry->file, $self->filter;
+    my $filter = shift;
+    return _filter_path $self->_file, $filter;
 }
 
 sub path {
     my $self = shift;
-    return _filter_path $self->entry->path, $self->filter;
+    my $filter = shift;
+    return _filter_path $self->_path, $filter;
 }
 
 sub _uri ($$) {
@@ -50,13 +70,14 @@ sub _uri ($$) {
 sub file_uri {
     my $self = shift;
     my $base = shift;
-    return _uri $base, $self->file;
+    my $filter = shift;
+    return _uri $base, $self->file($filter);
 }
 
 sub path_uri {
     my $self = shift;
     my $base = shift;
-    return _uri $base, $self->path;
+    my $filter = shift;
+    return _uri $base, $self->path($filter);
 }
 
-1;

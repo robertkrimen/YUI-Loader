@@ -4,13 +4,12 @@ use strict;
 use warnings;
 
 use Moose;
-use JS::YUI::Loader::Catalog;
-use constant Catalog => "JS::YUI::Loader::Catalog";
 
 has manifest => qw/is ro required 1 weak_ref 1/;
 has do_include => qw/is ro required 1/;
 
-for my $component (Catalog->names) {
+# TODO Urgh, ...
+for my $component (JS::YUI::Loader::Catalog->name_list) {
     no strict 'refs';
     *$component = sub {
         my $self = shift;

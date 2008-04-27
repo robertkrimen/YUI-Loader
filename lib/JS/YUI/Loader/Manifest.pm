@@ -4,16 +4,13 @@ use strict;
 use warnings;
 
 use Moose;
-use JS::YUI::Loader::Catalog;
-use constant Catalog => "JS::YUI::Loader::Catalog";
+
 use Algorithm::Dependency::Ordered;
 use Algorithm::Dependency::Source::HoA;
 # TODO use Hash::Dirty
 
+has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog/;
 has collection => qw/is ro required 1 lazy 1/, default => sub { {} };
-has schedule => qw/is ro required 1 lazy 1/, default => sub {
-    my $self = shift;
-};
 has dirty => qw/is rw required 1 lazy 1 default 1/;
 has include => qw/is ro required 1 lazy 1/, default => sub {
     my $self = shift;
@@ -26,7 +23,7 @@ has exclude => qw/is ro required 1 lazy 1/, default => sub {
     return JS::YUI::Loader::IncludeExclude->new(manifest => $self, do_include => 0);
 };
 
-sub list {
+sub schedule {
     my $self = shift;
     my @schedule = $self->_calculate;
     return wantarray ? @schedule : \@schedule;
@@ -37,7 +34,7 @@ sub _calculate {
     my $self = shift;
     if (! $self->{schedule} || $self->dirty) {
         $dependency ||= Algorithm::Dependency::Ordered->new(
-            source => Algorithm::Dependency::Source::HoA->new(Catalog->dependency_graph),
+            source => Algorithm::Dependency::Source::HoA->new($self->catalog->dependency_graph),
         );
         my $schedule = $dependency->schedule(keys %{ $self->collection }) || [];
         $self->{schedule} = $schedule;

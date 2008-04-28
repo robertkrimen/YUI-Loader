@@ -2,7 +2,7 @@ package JS::YUI::Loader::Entry;
 
 use Moose;
 use Path::Abstract;
-use Carp;
+use JS::YUI::Loader::Carp;
 
 has js => qw/is ro required 1 lazy 1/, default => sub { shift->type eq "js" };
 sub css { return ! shift->js }

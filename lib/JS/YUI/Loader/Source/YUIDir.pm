@@ -4,7 +4,7 @@ use Moose;
 extends qw/JS::YUI::Loader::Source/;
 
 use Path::Class;
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 use JS::YUI::Loader;
 
 has version => qw/is ro required 1 lazy 1/, default => JS::YUI::Loader->LATEST_YUI_VERSION;

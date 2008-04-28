@@ -19,7 +19,7 @@ use constant LATEST_YUI_VERSION => "2.5.1";
 
 use Moose;
 
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 use JS::YUI::Loader::Catalog;
 use HTML::Declare qw/LINK SCRIPT/;
 

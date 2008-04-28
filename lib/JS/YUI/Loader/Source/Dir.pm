@@ -4,7 +4,7 @@ use Moose;
 extends qw/JS::YUI::Loader::Source/;
 
 use Path::Class;
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 
 has base => qw/is ro/;
 

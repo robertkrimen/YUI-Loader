@@ -8,7 +8,7 @@ use JSON;
 use Scalar::Util qw/blessed/;
 use JS::YUI::Loader::Entry;
 use JS::YUI::Loader::Item;
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 
 BEGIN { 
     my $json = JSON->new;

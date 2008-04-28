@@ -4,7 +4,7 @@ use Moose;
 extends qw/JS::YUI::Loader::Cache::Dir/;
 
 use Path::Abstract;
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 
 has _uri => qw/is ro/;
 

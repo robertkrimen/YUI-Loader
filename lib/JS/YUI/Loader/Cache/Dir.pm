@@ -4,7 +4,7 @@ use Moose;
 extends qw/JS::YUI::Loader::Cache/;
 
 use File::Copy qw/copy/;
-use Carp::Clan;
+use JS::YUI::Loader::Carp;
 use LWP::UserAgent;
 
 has dir => qw/is ro/;

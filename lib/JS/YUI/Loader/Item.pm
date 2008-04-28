@@ -2,7 +2,7 @@ package JS::YUI::Loader::Item;
 
 use Moose;
 use Path::Abstract;
-use Carp;
+use JS::YUI::Loader::Carp;
 
 has filter => qw/is ro/;
 has entry => qw/is ro required 1 isa JS::YUI::Loader::Entry/, handles => [qw/name/];

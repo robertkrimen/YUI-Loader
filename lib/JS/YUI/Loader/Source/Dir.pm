@@ -3,13 +3,16 @@ package JS::YUI::Loader::Source::Dir;
 use Moose;
 extends qw/JS::YUI::Loader::Source/;
 
-has dir => qw/is ro required 1/;
+use Path::Class;
+use Carp::Clan;
+
+has base => qw/is ro/;
 
 sub BUILD {
     my $self = shift;
     my $given = shift;
-    my $dir = $given->{dir};
-    $self->{dir} = Path::Class::Dir->new($dir);
+    my $base = $self->base || $given->{dir} or croak "Don't have a base dir";
+    $self->{base} = Path::Class::Dir->new($base);
 }
 
 override file => sub {

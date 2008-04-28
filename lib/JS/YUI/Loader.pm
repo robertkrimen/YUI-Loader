@@ -21,12 +21,18 @@ use Moose;
 
 use Carp::Clan;
 use JS::YUI::Loader::Catalog;
+use HTML::Declare qw/LINK SCRIPT/;
 
 has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog lazy 1/, default => sub { shift->source->catalog };
-has manifest => qw/is ro required 1 isa JS::YUI::Loader::Manifest lazy 1/, handles => [qw/include exclude select parse schedule/], default => sub {
+has manifest => qw/is ro required 1 isa JS::YUI::Loader::Manifest lazy 1/, handles => [qw/include exclude clear select parse schedule/], default => sub {
     my $self = shift;
     require JS::YUI::Loader::Manifest;
     return JS::YUI::Loader::Manifest->new(catalog => $self->catalog, loader => $self);
+};
+has list => qw/is ro required 1 isa JS::YUI::Loader::List lazy 1/, default => sub {
+    my $self = shift;
+    require JS::YUI::Loader::List;
+    return JS::YUI::Loader::List->new(loader => $self);
 };
 has source => qw/is ro required 1 isa JS::YUI::Loader::Source/;
 has cache => qw/is ro isa JS::YUI::Loader::Cache/;
@@ -64,22 +70,76 @@ sub file {
 
 sub cache_uri {
     my $self = shift;
-    return $self->cache->uri(@_) or croak "Unable to get uri from cache ", $self->cache;
+    my $name = shift;
+    return $self->cache->uri([ $name => $self->filter ]) || croak "Unable to get uri for $name from cache ", $self->cache;
 }
 
 sub cache_file {
     my $self = shift;
-    return $self->cache->file(@_) or croak "Unable to get file from cache ", $self->cache;
+    my $name = shift;
+    return $self->cache->file([ $name => $self->filter ]) || croak "Unable to get file for $name from cache ", $self->cache;
 }
 
 sub source_uri {
     my $self = shift;
-    return $self->source->uri(@_) or croak "Unable to get uri from source ", $self->source;
+    my $name = shift;
+    return $self->source->uri([ $name => $self->filter ]) || croak "Unable to get uri for $name from source ", $self->source;
 }
 
 sub source_file {
     my $self = shift;
-    return $self->source->file(@_) or croak "Unable to get file from source ", $self->source;
+    my $name = shift;
+    return $self->source->file([ $name => $self->filter ]) || croak "Unable to get file for $name from source ", $self->source;
+}
+
+sub item {
+    my $self = shift;
+    my $name = shift;
+    return $self->catalog->item([ $name => $self->filter ]);
+}
+
+sub item_path {
+    my $self = shift;
+    my $name = shift;
+    return $self->item($name)->path;
+}
+
+sub item_file {
+    my $self = shift;
+    my $name = shift;
+    return $self->item($name)->file;
+}
+
+sub name_list {
+    my $self = shift;
+    return $self->manifest->schedule;
+}
+
+sub _html {
+    my $self = shift;
+    my $uri_list = shift;
+    my $separator = shift || "\n";
+    my @uri_list = $self->list->uri;
+    my @html;
+    for my $uri (@uri_list) {
+        if ($uri =~ m/\.css/) {
+            push @html, LINK({ rel => "stylesheet", type => "text/css", href => $uri });
+        }
+        else {
+            push @html, SCRIPT({ type => "text/javascript", src => $uri, _ => "" });
+        }
+    }
+    return join $separator, @html;
+}
+
+sub html {
+    my $self = shift;
+    return $self->_html([ $self->list->uri ], @_);
+}
+
+sub source_html {
+    my $self = shift;
+    return $self->_html([ $self->list->source_uri ], @_);
 }
 
 sub _new_given {
@@ -159,6 +219,48 @@ sub new_from_yui_host {
     $source{base} = delete $given->{base} if exists $given->{base};
     require JS::YUI::Loader::Source::YUIHost;
     my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+sub new_from_yui_dir {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    $source{dir} = delete $given->{dir} if exists $given->{dir};
+    require JS::YUI::Loader::Source::YUIDir;
+    my $source = JS::YUI::Loader::Source::YUIDir->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+sub new_from_dir {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    $source{dir} = delete $given->{dir} if exists $given->{dir};
+    require JS::YUI::Loader::Source::Dir;
+    my $source = JS::YUI::Loader::Source::Dir->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+sub new_from_uri {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    require JS::YUI::Loader::Source::URI;
+    my $source = JS::YUI::Loader::Source::URI->new(catalog => $catalog, %source);
 
     return $class->_new_finish($given, $source);
 }

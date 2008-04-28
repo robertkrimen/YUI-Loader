@@ -10,7 +10,7 @@ use Algorithm::Dependency::Source::HoA;
 # TODO use Hash::Dirty
 
 has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog/;
-has loader => qw/is ro isa JS::YUI::Loader/, handles => [];
+has loader => qw/is ro isa JS::YUI::Loader/;
 has collection => qw/is ro required 1 lazy 1/, default => sub { {} };
 has dirty => qw/is rw required 1 lazy 1 default 1/;
 has include => qw/is ro required 1 lazy 1/, default => sub {

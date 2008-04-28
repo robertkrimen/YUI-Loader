@@ -29,7 +29,9 @@ for my $name (JS::YUI::Loader::Catalog->name_list) {
 }
 
 sub then {
-    return shift->manifest;
+    my $self = shift;
+    my $manifest = $self->manifest;
+    return $manifest->loader || $manifest;
 }
 
 1;

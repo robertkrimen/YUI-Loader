@@ -3,15 +3,17 @@ package JS::YUI::Loader::Source::YUIDir;
 use Moose;
 extends qw/JS::YUI::Loader::Source/;
 
+use Path::Class;
+use Carp::Clan;
 use JS::YUI::Loader;
 
 has version => qw/is ro required 1 lazy 1/, default => JS::YUI::Loader->LATEST_YUI_VERSION;
-has base => qw/is ro required 1/;
+has base => qw/is ro/;
 
 sub BUILD {
     my $self = shift;
     my $given = shift;
-    my $base = $self->base;
+    my $base = $self->base || $given->{dir} or croak "Don't have a base dir";
     my $version = $self->version || 0;
     $version = JS::YUI::Loader->LATEST_YUI_VERSION if $version eq 0;
     $base =~ s/%v/$version/g;

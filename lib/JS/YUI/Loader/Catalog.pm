@@ -335,6 +335,12 @@ _END_
         $dependency_graph{$entry} = [ @{ $catalog->{$entry}->{requires} || [] } ];
         $catalog{$entry} = JS::YUI::Loader::Entry->parse($entry => $catalog->{$entry});
     }
+    $catalog{'reset'}->rank(-300);
+    $catalog{'reset-fonts'}->rank(-20);
+    $catalog{'reset-fonts-grids'}->rank(-10);
+    $catalog{'fonts'}->rank(-200);
+    $catalog{'grids'}->rank(-100);
+    $catalog{'base'}->rank(0);
 
     sub catalog {
         return \%catalog;

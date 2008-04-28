@@ -4,7 +4,10 @@ use Moose;
 use Path::Abstract;
 use Carp;
 
+has js => qw/is ro required 1 lazy 1/, default => sub { shift->type eq "js" };
+sub css { return ! shift->js }
 has name => qw/is ro required 1 isa Str/;
+has rank => qw/is rw required 1 isa Int/, default => 0;
 has type => qw/is ro required 1 isa Str/;
 has path => qw/is ro required 1 isa Path::Abstract/;
 has file => qw/is ro required 1 isa Str lazy 1/, default => sub {

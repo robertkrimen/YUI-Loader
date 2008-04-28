@@ -4,8 +4,9 @@ use Moose;
 extends qw/JS::YUI::Loader::Cache::Dir/;
 
 use Path::Abstract;
+use Carp::Clan;
 
-has uri => qw/is ro/;
+has _uri => qw/is ro/;
 
 sub BUILD {
     my $self = shift;
@@ -28,17 +29,17 @@ sub BUILD {
     $uri = URI->new("$uri") unless blessed $uri && $uri->isa("URI");
     $dir = Path::Class::Dir->new("$dir") unless blessed $dir && $dir->isa("Path::Class");
 
-    $self->{uri} = $uri;
+    $self->{_uri} = $uri;
     $self->{dir} = $dir;
 }
 
-sub uri {
+override uri => sub {
     my $self = shift;
 
     my ($path, $file) = $self->_file(@_);
-    my $uri = $self->uri->clone;
+    my $uri = $self->_uri->clone;
     $uri->path(Path::Abstract->new($uri->path, "/$file")->stringify);
     return $uri;
-}
+};
 
 1;

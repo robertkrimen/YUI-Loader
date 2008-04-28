@@ -1,12 +1,12 @@
 package JS::YUI::Loader::Cache::Dir;
 
 use Moose;
+extends qw/JS::YUI::Loader::Cache/;
 
 use File::Copy qw/copy/;
 use Carp::Clan;
 use LWP::UserAgent;
 
-has loader => qw/is ro required 1 isa JS::YUI::Loader weak_ref 1/;
 has dir => qw/is ro/;
 
 my $agent = LWP::UserAgent->new;
@@ -24,41 +24,38 @@ sub BUILD {
     $self->{dir} = $dir;
 }
 
-sub catalog {
-    return shift->loader->catalog;
-}
-
 sub _file {
     my $self = shift;
     my $item = shift;
-    my $filter = shift;
 
-    my $file = $self->catalog->item($item)->file($filter);
+    $item = $self->catalog->item($item);
+    my $file = $item->file;
     my $path = $self->dir->file($file);
 
     unless (-f $path && -s $path) {
-        my $source = $self->loader->source;
-        if ($source->is_remote) {
-            my $uri = $source->uri($item, $filter);
-            my $response = $self->request($uri);
+        my $source = $self->source;
+        if (my $source_file = $source->file($item)) {
+            copy $source_file, $path or croak "Unable to copy $source_file, $path: $!";
+        }
+        elsif (my $source_uri = $source->uri($item)) {
+            my $response = $self->request($source_uri);
             $path->parent->mkpath unless -d $path->parent;
             $path->openw->print($response->content);
         }
         else {
-            my $source_file = $source->file($item, $filter);
-            copy $source_file, $path or croak "Unable to copy $source_file, $path: $!";
+            croak "Unable to source anything!";
         }
     }
 
     return ($path, $file);
 }
 
-sub file {
+override file => sub {
     my $self = shift;
 
     my ($file) = $self->_file(@_);
     return $file;
-}
+};
 
 sub request {
     my $self = shift;

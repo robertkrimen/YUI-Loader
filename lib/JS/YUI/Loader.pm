@@ -19,17 +19,153 @@ use constant LATEST_YUI_VERSION => "2.5.1";
 
 use Moose;
 
-has manifest => qw/is ro required 1 lazy 1/, default => sub {
-    return JS::YUI::Loader::Manifest->new;
+use Carp::Clan;
+use JS::YUI::Loader::Catalog;
+
+has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog lazy 1/, default => sub { shift->source->catalog };
+has manifest => qw/is ro required 1 isa JS::YUI::Loader::Manifest lazy 1/, handles => [qw/include exclude select parse schedule/], default => sub {
+    my $self = shift;
+    require JS::YUI::Loader::Manifest;
+    return JS::YUI::Loader::Manifest->new(catalog => $self->catalog, loader => $self);
 };
+has source => qw/is ro required 1 isa JS::YUI::Loader::Source/;
+has cache => qw/is ro isa JS::YUI::Loader::Cache/;
+has filter => qw/is rw isa Str/, default => "";
 
-has catalog => qw/is ro required 1 lazy 1/, default => sub {
-    return JS::YUI::Loader::Catalog->new;
-};
+sub filter_min {
+    my $self = shift;
+    return $self->filter("min");
+    return $self;
+}
 
-has source => qw/is ro required 1/;
+sub filter_debug {
+    my $self = shift;
+    $self->filter("debug");
+    return $self;
+}
 
-has cache => qw/is ro/;
+sub no_filter {
+    my $self = shift;
+    $self->filter("");
+    return $self;
+}
+
+sub uri {
+    my $self = shift;
+    return $self->cache_uri(@_) if $self->cache;
+    return $self->source_uri(@_);
+}
+
+sub file {
+    my $self = shift;
+    return $self->cache_file(@_) if $self->cache;
+    return $self->source_file(@_);
+}
+
+sub cache_uri {
+    my $self = shift;
+    return $self->cache->uri(@_) or croak "Unable to get uri from cache ", $self->cache;
+}
+
+sub cache_file {
+    my $self = shift;
+    return $self->cache->file(@_) or croak "Unable to get file from cache ", $self->cache;
+}
+
+sub source_uri {
+    my $self = shift;
+    return $self->source->uri(@_) or croak "Unable to get uri from source ", $self->source;
+}
+
+sub source_file {
+    my $self = shift;
+    return $self->source->file(@_) or croak "Unable to get file from source ", $self->source;
+}
+
+sub _new_given {
+    my $class = shift;
+    return @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+}
+
+sub _new_catalog {
+    my $class = shift;
+    my $given = shift;
+    my $catalog = delete $given->{catalog} || {};
+    return $given->{catalog} = $catalog if blessed $catalog;
+    return $given->{catalog} = JS::YUI::Loader::Catalog->new(%$catalog);
+}
+
+sub _build_cache {
+    my $class = shift;
+    my $given = shift;
+    my $source = shift;
+
+    my (%cache, $cache_class);
+
+    if (ref $given eq "ARRAY") {
+        $cache_class = "JS::YUI::Loader::Cache::URI";
+        my ($uri, $dir) = @$given;
+        %cache = (uri => $uri, dir => $dir);
+    }
+    elsif (ref $given eq "Path::Resource") {
+        $cache_class = "JS::YUI::Loader::Cache::URI";
+        %cache = (uri => $given->uri, dir => $given->dir);
+    }
+    else {
+        $cache_class = "JS::YUI::Loader::Cache::Dir";
+        %cache = (dir => $given);
+    }
+
+    eval "require $cache_class;" or die $@;
+
+    return $cache_class->new(source => $source, %cache);
+}
+
+sub _new_cache {
+    my $class = shift;
+    my $given = shift;
+    my $source = shift;
+    if (my $cache = delete $given->{cache}) {
+        $given->{cache} = $class->_build_cache($cache, $source);
+    }
+}
+
+sub _new_given_catalog {
+    my $class = shift;
+    my $given = $class->_new_given(@_);
+
+    my $catalog = $class->_new_catalog($given);
+
+    return ($given, $catalog);
+}
+
+sub _new_finish {
+    my $class = shift;
+    my $given = shift;
+    my $source = shift;
+
+    $class->_new_cache($given, $source);
+
+    return $class->new(%$given, source => $source);
+}
+
+sub new_from_yui_host {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    require JS::YUI::Loader::Source::YUIHost;
+    my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+1;
+
+__END__
 
 sub BUILD {
     my $self = shift;
@@ -39,19 +175,6 @@ sub BUILD {
 #        my $cache_class
 #        my %cache_new;
         my $_cache;
-        if (ref $cache eq "ARRAY") {
-            require JS::YUI::Loader::Cache::URI;
-            my ($uri, $dir) = @$cache;
-            $_cache = JS::YUI::Loader::Cache::URI->new(loader => $self, uri => $uri, dir => $dir);
-        }
-        elsif (ref $cache eq "Path::Resource") {
-            require JS::YUI::Loader::Cache::URI;
-            $_cache = JS::YUI::Loader::Cache::URI->new(loader => $self, rsc => $cache);
-        }
-        else {
-            require JS::YUI::Loader::Cache::Dir;
-            $_cache = JS::YUI::Loader::Cache::Dir->new(loader => $self, dir => $cache);
-        }
         $self->{cache} = $_cache;
     }
 }

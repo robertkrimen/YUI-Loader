@@ -10,6 +10,7 @@ use Algorithm::Dependency::Source::HoA;
 # TODO use Hash::Dirty
 
 has catalog => qw/is ro required 1 isa JS::YUI::Loader::Catalog/;
+has loader => qw/is ro isa JS::YUI::Loader/, handles => [];
 has collection => qw/is ro required 1 lazy 1/, default => sub { {} };
 has dirty => qw/is rw required 1 lazy 1 default 1/;
 has include => qw/is ro required 1 lazy 1/, default => sub {
@@ -37,7 +38,11 @@ sub _calculate {
             source => Algorithm::Dependency::Source::HoA->new($self->catalog->dependency_graph),
         );
         my $schedule = $dependency->schedule(keys %{ $self->collection }) || [];
-        $self->{schedule} = $schedule;
+        my @css_schedule = grep { $self->catalog->entry($_)->css } @$schedule;
+        my @js_schedule = grep { $self->catalog->entry($_)->js } @$schedule;
+        @css_schedule = sort { $self->catalog->entry($a)->rank <=> $self->catalog->entry($b)->rank } @css_schedule;
+
+        $self->{schedule} = [ @css_schedule, @js_schedule ];
     }
     return @{ $self->{schedule} };
 }
@@ -53,16 +58,33 @@ sub parse {
         next if m/^\s*$/;
         chomp;
 
-        my $item = $_;
+        my $name = $_;
 
-        if      ($item =~ m/^\s*<script/) { ($item) = $item =~ m{src="(?:[^"]*)([^/]+)\.js"} }
-        elsif   ($item =~ m/^\s*<link/)   { ($item) = $item =~ m{href="(?:[^"]*)([^/]+)\.css"} }
+        if      ($name =~ m/^\s*<script/) { ($name) = $name =~ m{src="(?:[^"]*)([^/]+)\.js"} }
+        elsif   ($name =~ m/^\s*<link/)   { ($name) = $name =~ m{href="(?:[^"]*)([^/]+)\.css"} }
 
-        $item =~ s/-beta\b//;
-        $item =~ s/-min\b//;
-        $item =~ s/-debug\b//;
+        $name =~ s/-beta\b//;
+        $name =~ s/-min\b//;
+        $name =~ s/-debug\b//;
+
+        push @collection, $name;
 
     }
+
+    $self->select(@collection);
+}
+
+sub select {
+    my $self = shift;
+    for my $name (@_) {
+        warn "Can't find \"$name\" in the catalog" and next unless $self->catalog->entry($name);
+        $self->collection->{$name} = "";
+    }
+}
+
+sub clear {
+    my $self = shift;
+    $self->{collection} = {};
 }
 
 1;

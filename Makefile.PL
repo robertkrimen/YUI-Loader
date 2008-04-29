@@ -23,8 +23,6 @@ _END_
     requires $_;
 }
 
-
 auto_install;
 
 WriteAll;
-

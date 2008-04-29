@@ -13,9 +13,15 @@ sub file { return $base->file(@_) }
 
 my $loader = JS::YUI::Loader->new_from_yui_host(cache => $base);
 ok($loader);
-is($loader->file("yuitest"), file "yuitest.js");
+SKIP: {
+    $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
+    is($loader->file("yuitest"), file "yuitest.js");
+}
 $loader->filter_min;
-is($loader->file("yuitest"), file "yuitest-min.js");
+SKIP: {
+    $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
+    is($loader->file("yuitest"), file "yuitest-min.js");
+}
 is($loader->item_path("yuitest"), "yuitest/yuitest-min.js");
 is($loader->item_file("yuitest"), "yuitest-min.js");
 

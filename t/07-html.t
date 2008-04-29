@@ -4,6 +4,10 @@ use warnings;
 use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
+use Directory::Scratch;
+my $scratch = Directory::Scratch->new;
+my $base = $scratch->base;
+sub file { return $base->file(@_) }
 
 use JS::YUI::Loader;
 
@@ -19,3 +23,21 @@ is($loader->html."\n", <<_END_);
 <script src="http://yui.yahooapis.com/2.5.1/build/logger/logger.js" type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/2.5.1/build/yuitest/yuitest.js" type="text/javascript"></script>
 _END_
+
+SKIP: {
+    $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
+    my $loader = JS::YUI::Loader->new_from_yui_host(cache => { uri => "http://example.com/assets", dir => $base->subdir("htdocs/assets") });
+    $loader->include->yuitest->reset->fonts->base;
+    is($loader->html."\n", <<_END_);
+<link rel="stylesheet" href="http://example.com/assets/reset.css" type="text/css"/>
+<link rel="stylesheet" href="http://example.com/assets/fonts.css" type="text/css"/>
+<link rel="stylesheet" href="http://example.com/assets/base.css" type="text/css"/>
+<script src="http://example.com/assets/yahoo.js" type="text/javascript"></script>
+<script src="http://example.com/assets/dom.js" type="text/javascript"></script>
+<script src="http://example.com/assets/event.js" type="text/javascript"></script>
+<script src="http://example.com/assets/logger.js" type="text/javascript"></script>
+<script src="http://example.com/assets/yuitest.js" type="text/javascript"></script>
+_END_
+    ok(-s $base->file(qw/htdocs assets reset.css/));
+    ok(-s $base->file(qw/htdocs assets yuitest.js/));
+}

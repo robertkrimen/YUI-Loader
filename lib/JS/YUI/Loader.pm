@@ -5,11 +5,50 @@ use strict;
 
 =head1 NAME
 
-JS::YUI::Loader -
+JS::YUI::Loader - Load (and cache) the Yahoo YUI framework
 
 =head1 VERSION
 
 Version 0.01
+
+=head1 SYNOPSIS
+
+    use JS::YUI::Loader;
+
+    my $loader = JS::YUI::Loader->new_from_yui_host;
+    $loader->include->yuitest->reset->fonts->base;
+    print $loader->html;
+
+    # The above will yield:
+    # <link rel="stylesheet" href="http://yui.yahooapis.com/2.5.1/build/reset/reset.css" type="text/css"/>
+    # <link rel="stylesheet" href="http://yui.yahooapis.com/2.5.1/build/fonts/fonts.css" type="text/css"/>
+    # <link rel="stylesheet" href="http://yui.yahooapis.com/2.5.1/build/base/base.css" type="text/css"/>
+    # <script src="http://yui.yahooapis.com/2.5.1/build/yahoo/yahoo.js" type="text/javascript"></script>
+    # <script src="http://yui.yahooapis.com/2.5.1/build/dom/dom.js" type="text/javascript"></script>
+    # <script src="http://yui.yahooapis.com/2.5.1/build/event/event.js" type="text/javascript"></script>
+    # <script src="http://yui.yahooapis.com/2.5.1/build/logger/logger.js" type="text/javascript"></script>
+    # <script src="http://yui.yahooapis.com/2.5.1/build/yuitest/yuitest.js" type="text/javascript"></script>
+
+You can also cache YUI locally:
+
+    my $loader = JS::YUI::Loader->new_from_yui_host(cache => { dir => "htdocs/assets", uri => "http://example.com/assets" });
+    $loader->include->yuitest->reset->fonts->base;
+    print $loader->html;
+
+    # The above will yield:
+    # <link rel="stylesheet" href="http://example.com/assets/reset.css" type="text/css"/>
+    # <link rel="stylesheet" href="http://example.com/assets/fonts.css" type="text/css"/>
+    # <link rel="stylesheet" href="http://example.com/assets/base.css" type="text/css"/>
+    # <script src="http://example.com/assets/yahoo.js" type="text/javascript"></script>
+    # <script src="http://example.com/assets/dom.js" type="text/javascript"></script>
+    # <script src="http://example.com/assets/event.js" type="text/javascript"></script>
+    # <script src="http://example.com/assets/logger.js" type="text/javascript"></script>
+    # <script src="http://example.com/assets/yuitest.js" type="text/javascript"></script>
+
+=head1 DESCRIPTION
+
+JS::YUI::Loader is a tool for loading YUI assets within your application. Loader will either provide the URI/HTML to access http://yui.yahooapis.com directly,
+or you can cache assets locally or serve them from an exploded yui_x.x.x.zip dir.
 
 =cut
 
@@ -37,6 +76,130 @@ has list => qw/is ro required 1 isa JS::YUI::Loader::List lazy 1/, default => su
 has source => qw/is ro required 1 isa JS::YUI::Loader::Source/;
 has cache => qw/is ro isa JS::YUI::Loader::Cache/;
 has filter => qw/is rw isa Str/, default => "";
+
+=head1 METHODS
+
+=cut
+
+=head2 JS::YUI::Loader->new_from_yui_host([ base => <base>, version => <version> ])
+
+Return a new JS::YUI::Loader object configured to serve assets from http://yui.yahooapis.com/<version>
+
+=cut
+
+sub new_from_yui_host {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    require JS::YUI::Loader::Source::YUIHost;
+    my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+=head2 JS::YUI::Loader->new_from_yui_dir([ dir => <dir>, version => <version> ])
+
+Return a new JS::YUI::Loader object configured to serve assets from a local, exploded yui_x.x.x.zip dir
+
+As an example, for a dir of C<./assets>, the C<reset.css> asset should be available as:
+
+    ./assets/reset/reset.css
+
+=cut
+
+sub new_from_yui_dir {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{version} = delete $given->{version} if exists $given->{version};
+    $source{base} = delete $given->{base} if exists $given->{base};
+    $source{dir} = delete $given->{dir} if exists $given->{dir};
+    require JS::YUI::Loader::Source::YUIDir;
+    my $source = JS::YUI::Loader::Source::YUIDir->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+=head2 JS::YUI::Loader->new_from_uri([ base => <base> ])
+
+Return a new JS::YUI::Loader object configured to serve assets from an arbitrary uri
+
+As an example, for a base of C<http://example.com/assets>, the C<reset.css> asset should be available as:
+
+    http://example.com/assets/reset.css
+
+=cut
+
+sub new_from_uri {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    require JS::YUI::Loader::Source::URI;
+    my $source = JS::YUI::Loader::Source::URI->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+=head2 JS::YUI::Loader->new_from_dir([ dir => <dir> ])
+
+Return a new JS::YUI::Loader object configured to serve assets from an arbitrary dir
+
+As an example, for a dir of C<./assets>, the C<reset.css> asset should be available as:
+
+    ./assets/reset.css
+
+=cut
+
+sub new_from_dir {
+    my $class = shift;
+
+    my ($given, $catalog) = $class->_new_given_catalog(@_);
+
+    my %source;
+    $source{base} = delete $given->{base} if exists $given->{base};
+    $source{dir} = delete $given->{dir} if exists $given->{dir};
+    require JS::YUI::Loader::Source::Dir;
+    my $source = JS::YUI::Loader::Source::Dir->new(catalog => $catalog, %source);
+
+    return $class->_new_finish($given, $source);
+}
+
+=head2 select( <component>, <component>, ..., <component> )
+
+Include each <component> in the "manifest" for the loader.
+
+A <component> should correspond to an entry in the C<YUI component catalog> (see below)
+
+=head2 include
+
+Returns a chainable component selector that will include what is called
+
+You can use the methods of the selector to choose components to include. See C<YUI component catalog> below 
+
+You can return to the loader by using the special ->then method:
+
+    $loader->include->reset->yuilogger->grids->fonts->then->html;
+
+=head2 exclude
+
+Returns a chainable component selector that will exclude what is called
+
+You can use the methods of the selector to choose components to include. See C<YUI component catalog> below 
+
+You can return to the loader by using the special ->then method:
+
+    $loader->exclude->yuilogger->then->html;
+
+=cut
 
 sub filter_min {
     my $self = shift;
@@ -167,6 +330,11 @@ sub _build_cache {
         my ($uri, $dir) = @$given;
         %cache = (uri => $uri, dir => $dir);
     }
+    elsif (ref $given eq "HASH") {
+        $cache_class = "JS::YUI::Loader::Cache::URI";
+        my ($uri, $dir) = @$given{qw/uri dir/};
+        %cache = (uri => $uri, dir => $dir);
+    }
     elsif (ref $given eq "Path::Resource") {
         $cache_class = "JS::YUI::Loader::Cache::URI";
         %cache = (uri => $given->uri, dir => $given->dir);
@@ -209,137 +377,111 @@ sub _new_finish {
     return $class->new(%$given, source => $source);
 }
 
-sub new_from_yui_host {
-    my $class = shift;
+=head1 YUI component catalog
 
-    my ($given, $catalog) = $class->_new_given_catalog(@_);
+=head2 animation - Animation Utility (utility)
 
-    my %source;
-    $source{version} = delete $given->{version} if exists $given->{version};
-    $source{base} = delete $given->{base} if exists $given->{base};
-    require JS::YUI::Loader::Source::YUIHost;
-    my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog, %source);
+=head2 autocomplete - AutoComplete Control (widget)
 
-    return $class->_new_finish($given, $source);
-}
+=head2 base - Base CSS Package (css)
 
-sub new_from_yui_dir {
-    my $class = shift;
+=head2 button - Button Control (widget)
 
-    my ($given, $catalog) = $class->_new_given_catalog(@_);
+=head2 calendar - Calendar Control (widget)
 
-    my %source;
-    $source{version} = delete $given->{version} if exists $given->{version};
-    $source{base} = delete $given->{base} if exists $given->{base};
-    $source{dir} = delete $given->{dir} if exists $given->{dir};
-    require JS::YUI::Loader::Source::YUIDir;
-    my $source = JS::YUI::Loader::Source::YUIDir->new(catalog => $catalog, %source);
+=head2 charts - Charts Control (widget)
 
-    return $class->_new_finish($given, $source);
-}
+=head2 colorpicker - Color Picker Control (widget)
 
-sub new_from_dir {
-    my $class = shift;
+=head2 connection - Connection Manager (utility)
 
-    my ($given, $catalog) = $class->_new_given_catalog(@_);
+=head2 container - Container Family (widget)
 
-    my %source;
-    $source{base} = delete $given->{base} if exists $given->{base};
-    $source{dir} = delete $given->{dir} if exists $given->{dir};
-    require JS::YUI::Loader::Source::Dir;
-    my $source = JS::YUI::Loader::Source::Dir->new(catalog => $catalog, %source);
+=head2 containercore - Container Core (Module, Overlay) (widget)
 
-    return $class->_new_finish($given, $source);
-}
+=head2 cookie - Cookie Utility (utility)
 
-sub new_from_uri {
-    my $class = shift;
+=head2 datasource - DataSource Utility (utility)
 
-    my ($given, $catalog) = $class->_new_given_catalog(@_);
+=head2 datatable - DataTable Control (widget)
 
-    my %source;
-    $source{base} = delete $given->{base} if exists $given->{base};
-    require JS::YUI::Loader::Source::URI;
-    my $source = JS::YUI::Loader::Source::URI->new(catalog => $catalog, %source);
+=head2 dom - Dom Collection (core)
 
-    return $class->_new_finish($given, $source);
-}
+=head2 dragdrop - Drag &amp; Drop Utility (utility)
 
-1;
+=head2 editor - Rich Text Editor (widget)
 
-__END__
+=head2 element - Element Utility (utility)
 
-sub BUILD {
-    my $self = shift;
-    my $given = shift;
+=head2 event - Event Utility (core)
 
-    if (my $cache = $given->{cache}) {
-#        my $cache_class
-#        my %cache_new;
-        my $_cache;
-        $self->{cache} = $_cache;
-    }
-}
+=head2 fonts - Fonts CSS Package (css)
 
-sub new_from_yui_host {
-    require JS::YUI::Loader::Source::YUIHost;
+=head2 get - Get Utility (utility)
 
-    my $class = shift;
-    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+=head2 grids - Grids CSS Package (css)
 
-    my %source;
-    $source{version} = delete $given->{version} if exists $given->{version};
-    $source{base} = delete $given->{base} if exists $given->{base};
-    my $source = JS::YUI::Loader::Source::YUIHost->new(%source);
+=head2 history - Browser History Manager (utility)
 
-    return $class->new(source => $source, %$given);
-}
+=head2 imagecropper - ImageCropper Control (widget)
 
-sub new_from_yui_dir {
-    require JS::YUI::Loader::Source::YUIDir;
+=head2 imageloader - ImageLoader Utility (utility)
 
-    my $class = shift;
-    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+=head2 json - JSON Utility (utility)
 
-    my %source;
-    $source{version} = delete $given->{version} if exists $given->{version};
-    $source{base} = delete $given->{base} if exists $given->{base};
-    my $source = JS::YUI::Loader::Source::YUIDir->new(%source);
+=head2 layout - Layout Manager (widget)
 
-    return $class->new(source => $source, %$given);
-}
+=head2 logger - Logger Control (tool)
 
-sub new_from_dir {
-    require JS::YUI::Loader::Source::Dir;
+=head2 menu - Menu Control (widget)
 
-    my $class = shift;
-    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+=head2 profiler - Profiler (tool)
 
-    my %source;
-    $source{base} = delete $given->{base} if exists $given->{base};
-    my $source = JS::YUI::Loader::Source::Dir->new(%source);
+=head2 profilerviewer - ProfilerViewer Control (tool)
 
-    return $class->new(source => $source, %$given);
-}
+=head2 reset - Reset CSS Package (css)
 
-sub new_from_uri {
-    require JS::YUI::Loader::Source::URI;
+=head2 reset_fonts - reset-fonts.css (rollup)
 
-    my $class = shift;
-    my $given = @_ == 1 && ref $_[0] eq "HASH" ? shift : { @_ };
+=head2 reset_fonts_grids - reset-fonts-grids.css (rollup)
 
-    my %source;
-    $source{base} = delete $given->{base} if exists $given->{base};
-    my $source = JS::YUI::Loader::Source::URI->new(%source);
+=head2 resize - Resize Utility (utility)
 
-    return $class->new(source => $source, %$given);
-}
+=head2 selector - Selector Utility (utility)
+
+=head2 simpleeditor - Simple Editor (widget)
+
+=head2 slider - Slider Control (widget)
+
+=head2 tabview - TabView Control (widget)
+
+=head2 treeview - TreeView Control (widget)
+
+=head2 uploader - Uploader (widget)
+
+=head2 utilities - utilities.js (rollup)
+
+=head2 yahoo - Yahoo Global Object (core)
+
+=head2 yahoo_dom_event - yahoo-dom-event.js (rollup)
+
+=head2 yuiloader - Loader Utility (utility)
+
+=head2 yuiloader_dom_event - yuiloader-dom-event.js (rollup)
+
+=head2 yuitest - YUI Test Utility (tool)
+
+=cut
 
 1;
 
 =head1 AUTHOR
 
 Robert Krimen, C<< <rkrimen at cpan.org> >>
+
+=head1 SEE ALSO
+
+L<http://developer.yahoo.com/yui/>, L<developer.yahoo.com/yui/yuiloader/>
 
 =head1 BUGS
 
@@ -394,63 +536,3 @@ under the same terms as Perl itself.
 =cut
 
 1; # End of JS::YUI::Loader
-
-__END__
-
-sub manifest {
-    my $self = shift;
-    my $option = ref $_[0] eq "HASH" ? shift : {};
-    my @_manifest = map { split m/\n/ } @_;
-
-    my @manifest;
-    for (@_manifest) {
-        next if m/^\s*#/;
-        next if m/^\s*<!--/;
-        next if m/^\s*$/;
-        chomp;
-
-        my $item = $_;
-
-        if      ($item =~ m/^\s*<script/) { ($item) = $item =~ m/src="([^"]*)"/ }
-        elsif   ($item =~ m/^\s*<link/)   { ($item) = $item =~ m/href="([^"]*)"/ }
-
-        my $uri = URI->new($item);
-        push @manifest, $option->{path} ? $uri->path : $uri;
-    }
-
-    return wantarray ? @manifest : \@manifest;
-}
-
-sub fetch {
-    my $self = shift;
-    my $option = ref $_[0] eq "HASH" ? shift : { output_dir => "yui" };
-    my @manifest = @_;
-
-    my $output_dir = dir $option->{output_dir};
-    $output_dir->mkpath unless -d $output_dir;
-
-    my $output_rewrite = $option->{output_rewrite} || sub { $_ };
-
-    @manifest = $self->manifest(@manifest);
-
-    for my $uri (@manifest) {
-    
-        my $path = $uri->path;
-        my $file = $output_dir->file($path);
-
-        unless (-f $file && -s $file) {
-            my $response = $agent->get($uri);
-
-            warn "Didn't get a response for \"$uri\"\n" and next unless $response;
-            warn "Didn't get a successful response for \"$uri\": ", $response->status_line, "\n"  and next unless $response->is_success;
-
-            {
-                local $_ = $file;
-                $file = $output_rewrite->($file, $path, $uri); 
-            }
-
-            $file->parent->mkpath unless -d $file->parent;
-            $file->openw->print($response->content);
-        }
-    }
-}

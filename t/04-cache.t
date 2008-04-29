@@ -21,4 +21,7 @@ ok($cache);
 
 is($cache->uri("yuitest"), "http://example.com/t/yuitest.js");
 is($cache->uri("yuitest-min"), "http://example.com/t/yuitest-min.js");
-is($cache->file("yuitest"), file "yuitest.js");
+SKIP: {
+    $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
+    is($cache->file("yuitest"), file "yuitest.js");
+}

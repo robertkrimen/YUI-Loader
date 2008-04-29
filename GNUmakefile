@@ -7,14 +7,17 @@ dist:
 	perl Makefile.PL
 	$(MAKE) -f Makefile dist
 
-distclean test tardist: Makefile
-	make -f $< $@
+distclean tardist: Makefile
+	$(MAKE) -f $< $@
 
 Makefile: Makefile.PL
 	perl $<
 
 clean: distclean
 
+test: Makefile
+	TEST_YUI_HOST=1 $(MAKE) -f $< $@
+
 reset: clean
 	perl Makefile.PL
-	make -f Makefile test
+	$(MAKE) test

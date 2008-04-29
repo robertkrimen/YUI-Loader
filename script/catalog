@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+# vim: set filetype=perl:
+
+use strict;
+use warnings;
+
+use JS::YUI::Loader::Catalog;
+my $catalog = JS::YUI::Loader::Catalog->new;
+
+my @entry = sort { $a->name cmp $b->name } $catalog->entry_list;
+for my $entry (@entry) {
+    my $method = $entry->name;
+    $method =~ s/-/_/g;
+    print "=head2 $method - ", $entry->description, " (", $entry->kind, ")", "\n\n";
+}

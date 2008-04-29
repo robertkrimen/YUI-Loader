@@ -12,7 +12,7 @@ Algorithm::Dependency
 Carp::Clan::Share
 File::Copy
 HTML::Declare
-JSON
+JSON 2.08
 LWP::UserAgent
 Moose
 Path::Abstract
@@ -20,7 +20,8 @@ Path::Class
 Scalar::Util
 URI
 _END_
-    requires $_;
+    my ($module, $version) = split m/\s+/, $_;
+    requires $module, $version;
 }
 
 auto_install;

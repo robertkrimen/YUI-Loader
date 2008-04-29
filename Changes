@@ -1,3 +1,6 @@
+0.03 Tuesday April 29 11:57:55 PDT 2008:
+ - Ensure minimum version of 2.08 for JSON.pm
+
 0.02 Monday April 28 18:38:58 PDT 2008:
  - Disable network testing by default in t/04-cache.t
 

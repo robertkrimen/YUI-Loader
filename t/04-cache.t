@@ -19,9 +19,9 @@ my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog);
 my $cache = JS::YUI::Loader::Cache::URI->new(source => $source, dir => $base, uri => "http://example.com/t");
 ok($cache);
 
-is($cache->uri("yuitest"), "http://example.com/t/yuitest.js");
-is($cache->uri("yuitest-min"), "http://example.com/t/yuitest-min.js");
 SKIP: {
     $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
+    is($cache->uri("yuitest"), "http://example.com/t/yuitest.js");
+    is($cache->uri("yuitest-min"), "http://example.com/t/yuitest-min.js");
     is($cache->file("yuitest"), file "yuitest.js");
 }

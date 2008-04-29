@@ -1,2 +1,5 @@
+0.02 Monday April 28 18:38:58 PDT 2008:
+ - Disable network testing by default in t/04-cache.t
+
 0.01 Monday April 28 18:34:38 PDT 2008:
  - Initial release

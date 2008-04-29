@@ -379,97 +379,179 @@ sub _new_finish {
 
 =head1 YUI component catalog
 
-=head2 animation - Animation Utility (utility)
+=head2 animation
 
-=head2 autocomplete - AutoComplete Control (widget)
+Animation Utility (utility)
 
-=head2 base - Base CSS Package (css)
+=head2 autocomplete
 
-=head2 button - Button Control (widget)
+AutoComplete Control (widget)
 
-=head2 calendar - Calendar Control (widget)
+=head2 base
 
-=head2 charts - Charts Control (widget)
+Base CSS Package (css)
 
-=head2 colorpicker - Color Picker Control (widget)
+=head2 button
 
-=head2 connection - Connection Manager (utility)
+Button Control (widget)
 
-=head2 container - Container Family (widget)
+=head2 calendar
 
-=head2 containercore - Container Core (Module, Overlay) (widget)
+Calendar Control (widget)
 
-=head2 cookie - Cookie Utility (utility)
+=head2 charts
 
-=head2 datasource - DataSource Utility (utility)
+Charts Control (widget)
 
-=head2 datatable - DataTable Control (widget)
+=head2 colorpicker
 
-=head2 dom - Dom Collection (core)
+Color Picker Control (widget)
 
-=head2 dragdrop - Drag &amp; Drop Utility (utility)
+=head2 connection
 
-=head2 editor - Rich Text Editor (widget)
+Connection Manager (utility)
 
-=head2 element - Element Utility (utility)
+=head2 container
 
-=head2 event - Event Utility (core)
+Container Family (widget)
 
-=head2 fonts - Fonts CSS Package (css)
+=head2 containercore
 
-=head2 get - Get Utility (utility)
+Container Core (Module, Overlay) (widget)
 
-=head2 grids - Grids CSS Package (css)
+=head2 cookie
 
-=head2 history - Browser History Manager (utility)
+Cookie Utility (utility)
 
-=head2 imagecropper - ImageCropper Control (widget)
+=head2 datasource
 
-=head2 imageloader - ImageLoader Utility (utility)
+DataSource Utility (utility)
 
-=head2 json - JSON Utility (utility)
+=head2 datatable
 
-=head2 layout - Layout Manager (widget)
+DataTable Control (widget)
 
-=head2 logger - Logger Control (tool)
+=head2 dom
 
-=head2 menu - Menu Control (widget)
+Dom Collection (core)
 
-=head2 profiler - Profiler (tool)
+=head2 dragdrop
 
-=head2 profilerviewer - ProfilerViewer Control (tool)
+Drag &amp; Drop Utility (utility)
 
-=head2 reset - Reset CSS Package (css)
+=head2 editor
 
-=head2 reset_fonts - reset-fonts.css (rollup)
+Rich Text Editor (widget)
 
-=head2 reset_fonts_grids - reset-fonts-grids.css (rollup)
+=head2 element
 
-=head2 resize - Resize Utility (utility)
+Element Utility (utility)
 
-=head2 selector - Selector Utility (utility)
+=head2 event
 
-=head2 simpleeditor - Simple Editor (widget)
+Event Utility (core)
 
-=head2 slider - Slider Control (widget)
+=head2 fonts
 
-=head2 tabview - TabView Control (widget)
+Fonts CSS Package (css)
 
-=head2 treeview - TreeView Control (widget)
+=head2 get
 
-=head2 uploader - Uploader (widget)
+Get Utility (utility)
 
-=head2 utilities - utilities.js (rollup)
+=head2 grids
 
-=head2 yahoo - Yahoo Global Object (core)
+Grids CSS Package (css)
 
-=head2 yahoo_dom_event - yahoo-dom-event.js (rollup)
+=head2 history
 
-=head2 yuiloader - Loader Utility (utility)
+Browser History Manager (utility)
 
-=head2 yuiloader_dom_event - yuiloader-dom-event.js (rollup)
+=head2 imagecropper
 
-=head2 yuitest - YUI Test Utility (tool)
+ImageCropper Control (widget)
+
+=head2 imageloader
+
+ImageLoader Utility (utility)
+
+=head2 json
+
+JSON Utility (utility)
+
+=head2 layout
+
+Layout Manager (widget)
+
+=head2 logger
+
+Logger Control (tool)
+
+=head2 menu
+
+Menu Control (widget)
+
+=head2 profiler
+
+Profiler (tool)
+
+=head2 profilerviewer
+
+ProfilerViewer Control (tool)
+
+=head2 reset
+
+Reset CSS Package (css)
+
+=head2 reset_fonts
+
+=head2 reset_fonts_grids
+
+=head2 resize
+
+Resize Utility (utility)
+
+=head2 selector
+
+Selector Utility (utility)
+
+=head2 simpleeditor
+
+Simple Editor (widget)
+
+=head2 slider
+
+Slider Control (widget)
+
+=head2 tabview
+
+TabView Control (widget)
+
+=head2 treeview
+
+TreeView Control (widget)
+
+=head2 uploader
+
+Uploader (widget)
+
+=head2 utilities
+
+=head2 yahoo
+
+Yahoo Global Object (core)
+
+=head2 yahoo_dom_event
+
+=head2 yuiloader
+
+Loader Utility (utility)
+
+=head2 yuiloader_dom_event
+
+=head2 yuitest
+
+YUI Test Utility (tool)
 
 =cut
 

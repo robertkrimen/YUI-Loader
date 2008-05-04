@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-JS::YUI::Loader - Load (and cache) the Yahoo YUI framework
+JS::YUI::Loader - Load (and cache) the Yahoo JavaScript YUI framework
 
 =head1 VERSION
 
@@ -83,11 +83,17 @@ has filter => qw/is rw isa Str/, default => "";
 
 =head2 JS::YUI::Loader->new_from_yui_host([ base => <base>, version => <version> ])
 
-Return a new JS::YUI::Loader object configured to serve assets from http://yui.yahooapis.com/<version>
+=head2 JS::YUI::Loader->new_from_internet([ base => <base>, version => <version> ])
+
+Return a new JS::YUI::Loader object configured to fetch and/or serve assets from http://yui.yahooapis.com/<version>
 
 =cut
 
 sub new_from_yui_host {
+    return shift->new_from_internet(@_);
+}
+
+sub new_from_internet {
     my $class = shift;
 
     my ($given, $catalog) = $class->_new_given_catalog(@_);
@@ -95,15 +101,15 @@ sub new_from_yui_host {
     my %source;
     $source{version} = delete $given->{version} if exists $given->{version};
     $source{base} = delete $given->{base} if exists $given->{base};
-    require JS::YUI::Loader::Source::YUIHost;
-    my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog, %source);
+    require JS::YUI::Loader::Source::Internet;
+    my $source = JS::YUI::Loader::Source::Internet->new(catalog => $catalog, %source);
 
     return $class->_new_finish($given, $source);
 }
 
 =head2 JS::YUI::Loader->new_from_yui_dir([ dir => <dir>, version => <version> ])
 
-Return a new JS::YUI::Loader object configured to serve assets from a local, exploded yui_x.x.x.zip dir
+Return a new JS::YUI::Loader object configured to fetch/serve assets from a local, exploded yui_x.x.x.zip dir
 
 As an example, for a dir of C<./assets>, the C<reset.css> asset should be available as:
 
@@ -698,7 +704,11 @@ Robert Krimen, C<< <rkrimen at cpan.org> >>
 
 =head1 SEE ALSO
 
-L<http://developer.yahoo.com/yui/>, L<developer.yahoo.com/yui/yuiloader/>
+L<http://developer.yahoo.com/yui/>
+
+L<http://developer.yahoo.com/yui/yuiloader/>
+
+L<JS::jQuery::Loader>
 
 =head1 BUGS
 

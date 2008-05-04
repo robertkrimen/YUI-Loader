@@ -1,3 +1,7 @@
+0.05 Saturday May 03 19:29:07 PDT 2008:
+ - Some documentation tweaks
+ - Changed JS::YUI::Loader::Source::YUIHost to ::Internet to be consistent with JS::jQuery::Loader
+
 0.04 Thursday May 01 21:06:48 PDT 2008:
  - Moar documentation
 

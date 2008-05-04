@@ -29,6 +29,7 @@ lib/JS/YUI/Loader/Source/Dir.pm
 lib/JS/YUI/Loader/Source/URI.pm
 lib/JS/YUI/Loader/Source/YUIDir.pm
 lib/JS/YUI/Loader/Source/YUIHost.pm
+lib/JS/YUI/Loader/Source/Internet.pm
 META.yml
 t/00-load.t
 t/01-catalog.t

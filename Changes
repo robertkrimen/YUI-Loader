@@ -1,3 +1,6 @@
+0.06 Wednesday May 28 15:10:29 PDT 2008: 
+ - Automatically include the default "sam" skin if an object is skinnable
+
 0.05 Saturday May 03 19:29:07 PDT 2008:
  - Some documentation tweaks
  - Changed JS::YUI::Loader::Source::YUIHost to ::Internet to be consistent with JS::jQuery::Loader

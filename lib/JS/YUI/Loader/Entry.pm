@@ -16,6 +16,7 @@ has file => qw/is ro required 1 isa Str lazy 1/, default => sub {
     my $self = shift;
     $self->path->last;
 };
+has skin => qw/is ro required 1/;
 
 sub parse {
     my $class = shift;
@@ -23,7 +24,7 @@ sub parse {
     my $given = shift;
     my $path = $given->{path};
     $path =~ s/-min\b//;
-    return $class->new(name => $name, type => $given->{type}, path => Path::Abstract->new($path));
+    return $class->new(name => $name, type => $given->{type}, skin => $given->{skinnable}, path => Path::Abstract->new($path));
 }
 
 1;

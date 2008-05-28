@@ -38,11 +38,25 @@ sub _calculate {
             source => Algorithm::Dependency::Source::HoA->new($self->catalog->dependency_graph),
         );
         my $schedule = $dependency->schedule(keys %{ $self->collection }) || [];
-        my @css_schedule = grep { $self->catalog->entry($_)->css } @$schedule;
-        my @js_schedule = grep { $self->catalog->entry($_)->js } @$schedule;
-        @css_schedule = sort { $self->catalog->entry($a)->rank <=> $self->catalog->entry($b)->rank } @css_schedule;
+        my @schedule = map { $self->catalog->entry($_) } @$schedule;
+        my (@css_schedule, @js_schedule);
+        for (@schedule) {
+            if ($_->css) {
+                push @css_schedule, $_;
+            }
+            else {
+                push @js_schedule, $_;
+            }
+        }
+#        my @css_schedule = grep { $_->css } @schedule;
+#        my @js_schedule = grep { $_->js } @schedule;
+        @css_schedule = sort { $a->rank <=> $b->rank } @css_schedule;
 
-        $self->{schedule} = [ @css_schedule, @js_schedule ];
+        for (@js_schedule) {
+            push @css_schedule, $self->catalog->entry($_->name . "-skin") if $_->skin;
+        }
+    
+        $self->{schedule} = [ map { $_->name } @css_schedule, @js_schedule ];
     }
     return @{ $self->{schedule} };
 }

@@ -29,7 +29,7 @@ cmp_deeply(scalar $manifest->schedule, []);
 
 $manifest->include->yuitest(1);
 
-cmp_deeply(scalar $manifest->schedule, bag(qw/yahoo dom event logger yuitest/));
+cmp_deeply(scalar $manifest->schedule, bag(qw/logger-skin yuitest-skin yahoo dom event logger yuitest/));
 
 $manifest->clear;
 
@@ -45,4 +45,4 @@ cmp_deeply(scalar $manifest->schedule, [qw/reset fonts grids reset-fonts-grids b
 
 $manifest->exclude->reset->fonts->grids->include->yuitest;
 
-cmp_deeply(scalar $manifest->schedule, [qw/reset-fonts-grids base yahoo dom event logger yuitest/]);
+cmp_deeply(scalar $manifest->schedule, [qw/reset-fonts-grids base logger-skin yuitest-skin yahoo dom event logger yuitest/]);

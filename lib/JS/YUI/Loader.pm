@@ -9,7 +9,7 @@ JS::YUI::Loader - Load (and cache) the Yahoo JavaScript YUI framework
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,7 @@ or you can cache assets locally or serve them from an exploded yui_x.x.x.zip dir
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use constant LATEST_YUI_VERSION => "2.5.1";
 

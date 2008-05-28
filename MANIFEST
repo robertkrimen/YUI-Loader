@@ -39,6 +39,7 @@ t/04-cache.t
 t/05-loader.t
 t/06-list.t
 t/07-html.t
+t/90-colorpicker.t
 t/author/boilerplate.t
 t/author/pod-coverage.t
 t/author/pod.t

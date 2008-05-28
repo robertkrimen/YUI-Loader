@@ -380,6 +380,18 @@ _END_
 }
 _END_
 
+    while (my ($name, $value) = each %$catalog) {
+        next unless $value->{skinnable};
+        $catalog->{"$name-skin"} = {
+            type => "css",
+            path => "$name/assets/skins/sam/$name.css",
+        };
+        $catalog_meta->{"$name-skin"} = {
+            type => "css",
+            name => "Sam Skin for $name",
+        };
+    }
+
     my %catalog;
     my %dependency_graph;
     for my $entry (keys %$catalog) {

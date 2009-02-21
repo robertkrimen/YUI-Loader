@@ -4,10 +4,28 @@ name     'JS-YUI-Loader';
 all_from 'lib/JS/YUI/Loader.pm';
 author   'Robert Krimen <rkrimen@cpan.org>';
 
-build_requires 'Test::More';
-build_requires 'Directory::Scratch';
+resources repository => 'http://github.com/robertkrimen/yui-loader/tree/master';
 
-for (split m/\n/, <<_END_) {
+{
+    require ExtUtils::MakeMaker;
+    use strict;
+    no strict 'refs';
+
+    my $libscan = \&{"ExtUtils::MM_Any::libscan"};
+    *{"ExtUtils::MM_Any::libscan"} = sub {
+        return '' unless $libscan->(@_);
+        return '' if $_[1] =~ /\.sw[p-z]$/;
+        return $_[1];
+    };
+}
+
+{
+    map { my ($pk, $vr) = split m/\s/; build_requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
+Test::Most
+Directory::Scratch
+_END_
+
+    map { my ($pk, $vr) = split m/\s/; requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
 Algorithm::Dependency
 Carp::Clan::Share
 File::Copy
@@ -20,8 +38,11 @@ Path::Class
 Scalar::Util
 URI
 _END_
-    my ($module, $version) = split m/\s+/, $_;
-    requires $module, $version;
+}
+
+if (-e 'inc/.author') {
+    my $all_from = join '/', 'lib', split m/-/, name . '.pm';
+    `perldoc -tF $all_from > README` if ! -e 'README' || (stat $all_from)[9] > (stat 'README')[9];
 }
 
 auto_install;

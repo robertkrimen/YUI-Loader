@@ -5,13 +5,13 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::YUI::Loader;
+use YUI::Loader;
 use Directory::Scratch;
 my $scratch = Directory::Scratch->new;
 my $base = $scratch->base;
 sub file { return $base->file(@_) }
 
-my $loader = JS::YUI::Loader->new_from_yui_host(cache => $base);
+my $loader = YUI::Loader->new_from_yui_host(cache => $base);
 ok($loader);
 SKIP: {
     $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
@@ -25,13 +25,13 @@ SKIP: {
 is($loader->item_path("yuitest"), "yuitest/yuitest-min.js");
 is($loader->item_file("yuitest"), "yuitest-min.js");
 
-ok(JS::YUI::Loader->new_from_yui_host);
-ok(JS::YUI::Loader->new_from_yui_dir(base => "./"));
-ok(JS::YUI::Loader->new_from_uri(base => "./"));
-ok(JS::YUI::Loader->new_from_dir(base => "./"));
+ok(YUI::Loader->new_from_yui_host);
+ok(YUI::Loader->new_from_yui_dir(base => "./"));
+ok(YUI::Loader->new_from_uri(base => "./"));
+ok(YUI::Loader->new_from_dir(base => "./"));
 
-ok(JS::YUI::Loader->new_from_yui_dir(dir => "./"));
-ok(JS::YUI::Loader->new_from_dir(dir => "./"));
+ok(YUI::Loader->new_from_yui_dir(dir => "./"));
+ok(YUI::Loader->new_from_dir(dir => "./"));
 
-is(JS::YUI::Loader->new_from_yui_dir(dir => "./yui/\%v/build")->source->base, "yui/2.5.1/build");
+is(YUI::Loader->new_from_yui_dir(dir => "./yui/\%v/build")->source->base, "yui/2.5.1/build");
 

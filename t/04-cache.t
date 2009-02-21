@@ -9,14 +9,14 @@ my $scratch = Directory::Scratch->new;
 my $base = $scratch->base;
 sub file { return $base->file(@_) }
 
-use JS::YUI::Loader::Catalog;
-use JS::YUI::Loader::Source::YUIHost;
-use JS::YUI::Loader::Source::YUIHost;
-use JS::YUI::Loader::Cache::URI;
+use YUI::Loader::Catalog;
+use YUI::Loader::Source::YUIHost;
+use YUI::Loader::Source::YUIHost;
+use YUI::Loader::Cache::URI;
 
-my $catalog = JS::YUI::Loader::Catalog->new;
-my $source = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog);
-my $cache = JS::YUI::Loader::Cache::URI->new(source => $source, dir => $base, uri => "http://example.com/t");
+my $catalog = YUI::Loader::Catalog->new;
+my $source = YUI::Loader::Source::YUIHost->new(catalog => $catalog);
+my $cache = YUI::Loader::Cache::URI->new(source => $source, dir => $base, uri => "http://example.com/t");
 ok($cache);
 
 SKIP: {

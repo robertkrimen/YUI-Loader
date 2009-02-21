@@ -5,9 +5,9 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::YUI::Loader;
+use YUI::Loader;
 
-my $loader = JS::YUI::Loader->new_from_yui_host(cache => "t.tmp");
+my $loader = YUI::Loader->new_from_yui_host(cache => "t.tmp");
 ok($loader->list);
 
 cmp_deeply([ $loader->list->name ], []);

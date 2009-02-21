@@ -5,11 +5,11 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::YUI::Loader::Catalog;
-use JS::YUI::Loader::Manifest;
+use YUI::Loader::Catalog;
+use YUI::Loader::Manifest;
 
-my $catalog = JS::YUI::Loader::Catalog->new;
-my $manifest = JS::YUI::Loader::Manifest->new(catalog => $catalog);
+my $catalog = YUI::Loader::Catalog->new;
+my $manifest = YUI::Loader::Manifest->new(catalog => $catalog);
 ok($manifest);
 
 $manifest->include->animation->yuitest;

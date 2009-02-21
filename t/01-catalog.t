@@ -5,9 +5,9 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::YUI::Loader::Catalog;
+use YUI::Loader::Catalog;
 
-my $catalog = JS::YUI::Loader::Catalog->new;
+my $catalog = YUI::Loader::Catalog->new;
 ok($catalog);
 
 cmp_deeply([ $catalog->name_list ], superbagof(qw/reset base container containercore yuitest/));

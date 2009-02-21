@@ -9,9 +9,9 @@ my $scratch = Directory::Scratch->new;
 my $base = $scratch->base;
 sub file { return $base->file(@_) }
 
-use JS::YUI::Loader;
+use YUI::Loader;
 
-my $loader = JS::YUI::Loader->new_from_yui_host;
+my $loader = YUI::Loader->new_from_yui_host;
 $loader->include->yuitest->reset->fonts->base;
 is($loader->html."\n", <<_END_);
 <link rel="stylesheet" href="http://yui.yahooapis.com/2.5.1/build/reset/reset.css" type="text/css"/>
@@ -28,7 +28,7 @@ _END_
 
 SKIP: {
     $ENV{TEST_YUI_HOST} or skip "Not testing going out to the yui host";
-    my $loader = JS::YUI::Loader->new_from_yui_host(cache => { uri => "http://example.com/assets", dir => $base->subdir("htdocs/assets") });
+    my $loader = YUI::Loader->new_from_yui_host(cache => { uri => "http://example.com/assets", dir => $base->subdir("htdocs/assets") });
     $loader->include->yuitest->reset->fonts->base;
     is($loader->html."\n", <<_END_);
 <link rel="stylesheet" href="http://example.com/assets/reset.css" type="text/css"/>

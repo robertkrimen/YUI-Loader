@@ -3,7 +3,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-	use_ok( 'JS::YUI::Loader' );
+	use_ok( 'YUI::Loader' );
 }
 
-diag( "Testing JS::YUI::Loader $JS::YUI::Loader::VERSION, Perl $], $^X" );
+diag( "Testing YUI::Loader $YUI::Loader::VERSION, Perl $], $^X" );

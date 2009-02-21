@@ -5,13 +5,13 @@ use Test::More;
 use Test::Deep;
 plan qw/no_plan/;
 
-use JS::YUI::Loader::Catalog;
-use JS::YUI::Loader::Source::YUIHost;
-use JS::YUI::Loader::Source::YUIDir;
+use YUI::Loader::Catalog;
+use YUI::Loader::Source::YUIHost;
+use YUI::Loader::Source::YUIDir;
 
-my $catalog = JS::YUI::Loader::Catalog->new;
-my $source_yui_host = JS::YUI::Loader::Source::YUIHost->new(catalog => $catalog);
-my $source_yui_dir = JS::YUI::Loader::Source::YUIDir->new(catalog => $catalog, base => "yui/build");
+my $catalog = YUI::Loader::Catalog->new;
+my $source_yui_host = YUI::Loader::Source::YUIHost->new(catalog => $catalog);
+my $source_yui_dir = YUI::Loader::Source::YUIDir->new(catalog => $catalog, base => "yui/build");
 ok($source_yui_host);
 ok($source_yui_dir);
 

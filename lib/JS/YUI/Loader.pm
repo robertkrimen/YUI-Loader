@@ -7,6 +7,13 @@ use strict;
 
 JS::YUI::Loader - Load (and cache) the Yahoo JavaScript YUI framework **DEPRECATED**
 
+=head1 DEPRECATED
+
+The JS::YUI::Loader namespace is deprecated and can be removed at any time: use L<YUI::Loader> instead
+
+Since this module did not (technically) carry a JavaScript payload, it has been moved out
+of the JS:: namespace. See L<JS> (JavaScript Modules on CPAN) for more information
+
 =cut
 
 sub _deprecation_warning {

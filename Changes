@@ -1,3 +1,6 @@
+0.06_1 Saturday February 21 13:21:57 PST 2009:
+ - Moved out of JS::YUI::Loader namespace
+
 0.06 Wednesday May 28 15:10:29 PDT 2008: 
  - Automatically include the default "sam" skin if an object is skinnable
 

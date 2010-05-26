@@ -45,7 +45,7 @@ or you can cache assets locally or serve them from an exploded yui_x.x.x.zip dir
 
 =cut
 
-use constant LATEST_YUI_VERSION => "2.5.1";
+use constant LATEST_YUI_VERSION => "2.8.1";
 
 use Moose;
 

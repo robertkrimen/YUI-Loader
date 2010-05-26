@@ -2,7 +2,7 @@ package YUI::Loader::List;
 
 use Moose;
 
-has loader => qw/is ro requires 1 isa YUI::Loader weak_ref 1/;
+has loader => qw/is ro required 1 isa YUI::Loader weak_ref 1/;
 
 sub name {
     my $self = shift;

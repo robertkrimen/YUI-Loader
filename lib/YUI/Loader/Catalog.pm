@@ -293,7 +293,7 @@ BEGIN {
         'uploader': {
             'type': 'js',
             'path': 'uploader/uploader-experimental.js',
-            'requires': ['yahoo']
+            'requires': ['yahoo', 'dom', 'event', 'element']
         },
 
         'utilities': {

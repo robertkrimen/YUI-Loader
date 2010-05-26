@@ -4,8 +4,8 @@
 use strict;
 use warnings;
 
-use JS::YUI::Loader::Catalog;
-my $catalog = JS::YUI::Loader::Catalog->new;
+use YUI::Loader::Catalog;
+my $catalog = YUI::Loader::Catalog->new;
 
 my @entry = sort { $a->name cmp $b->name } $catalog->entry_list;
 for my $entry (@entry) {

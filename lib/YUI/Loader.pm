@@ -695,4 +695,6 @@ L<http://developer.yahoo.com/yui/yuiloader/>
 
 L<JS::jQuery::Loader>
 
+=cut
+
 1;

@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use Dzpl
+    name => 'YUI-Loader',
+    version => '0.070',
+    author => 'Robert Krimen <robertkrimen@gmail.com>',
+    license => 'Perl5',
+    copyright => 'Robert Krimen',
+
+    require => q/
+        Algorithm::Dependency
+        Carp::Clan::Share
+        File::Copy
+        HTML::Declare
+        JSON 2.08
+        LWP::UserAgent
+        Moose
+        Path::Abstract
+        Path::Class
+        Scalar::Util
+        URI
+
+        [Test]
+        Test::Most
+        Directory::Scratch
+    /,
+;
+
+{ plugin '@ROKR' }
+

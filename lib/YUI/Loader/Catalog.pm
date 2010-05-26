@@ -203,6 +203,14 @@ BEGIN {
             'requires': ['containercore'],
             'skinnable': true
         },
+    
+        'paginator': {
+            'type': 'js',
+            'path': 'paginator/paginator-min.js',
+            'requires': ['event', 'element'],
+            'optional': ['selector'],
+            'skinnable': true
+        },
 
         'profiler': {
             'type': 'js',
@@ -325,7 +333,7 @@ BEGIN {
             'path': 'yuitest/yuitest-min.js',
             'requires': ['logger'],
             'skinnable': true
-        }
+        },
 }
 _END_
 
@@ -359,6 +367,7 @@ _END_
     "layout":{name:"Layout Manager", type: "widget"},
     "logger":{name:"Logger Control", type: "tool"},
     "menu":{name:"Menu Control", type: "widget"},
+    "paginator":{name:"Paginator Control", type: "widget"},
     "profiler":{name:"Profiler", type: "tool"},
     "profilerviewer":{name:"ProfilerViewer Control", type: "tool"},
     "reset":{name:"Reset CSS Package", type: "css"},

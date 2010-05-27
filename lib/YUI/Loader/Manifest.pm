@@ -53,7 +53,8 @@ sub _calculate {
         @css_schedule = sort { $a->rank <=> $b->rank } @css_schedule;
 
         for (@js_schedule) {
-            push @css_schedule, $self->catalog->entry($_->name . "-skin") if $_->skin;
+#            push @css_schedule, $self->catalog->entry($_->name . "-skin") if $_->skin;
+            push @css_schedule, $self->catalog->entry($_->name) if $_->skin;
         }
     
         $self->{schedule} = [ map { $_->name } @css_schedule, @js_schedule ];

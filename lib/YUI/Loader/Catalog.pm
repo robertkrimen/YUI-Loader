@@ -23,7 +23,7 @@ BEGIN {
         'autocomplete': {
             'type': 'js',
             'path': 'autocomplete/autocomplete-min.js',
-            'requires': ['dom', 'event'],
+            'requires': ['dom', 'event', 'datasource'],
             'optional': ['connection', 'animation'],
             'skinnable': true
         },
@@ -46,13 +46,22 @@ BEGIN {
             'type': 'js',
             'path': 'calendar/calendar-min.js',
             'requires': ['event', 'dom'],
+            'supersedes': ['datemeth'],
+            'skinnable': true
+        },
+
+        'carousel': {
+            'type': 'js',
+            'path': 'carousel/carousel-min.js',
+            'requires': ['element'],
+            'optional': ['animation'],
             'skinnable': true
         },
 
         'charts': {
             'type': 'js',
-            'path': 'charts/charts-experimental-min.js',
-            'requires': ['element', 'json', 'datasource']
+            'path': 'charts/charts-min.js',
+            'requires': ['element', 'json', 'datasource', 'swf']
         },
 
         'colorpicker': {
@@ -66,7 +75,15 @@ BEGIN {
         'connection': {
             'type': 'js',
             'path': 'connection/connection-min.js',
-            'requires': ['event']
+            'requires': ['event'],
+            'supersedes': ['connectioncore']
+        },
+
+        'connectioncore': {
+            'type': 'js',
+            'path': 'connection/connection_core-min.js',
+            'requires': ['event'],
+            'pkg': 'connection'
         },
 
         'container': {
@@ -81,29 +98,36 @@ BEGIN {
         'containercore': {
             'type': 'js',
             'path': 'container/container_core-min.js',
+
             'requires': ['dom', 'event'],
             'pkg': 'container'
         },
 
         'cookie': {
             'type': 'js',
-            'path': 'cookie/cookie-beta-min.js',
+            'path': 'cookie/cookie-min.js',
             'requires': ['yahoo']
         },
 
         'datasource': {
             'type': 'js',
-            'path': 'datasource/datasource-beta-min.js',
+            'path': 'datasource/datasource-min.js',
             'requires': ['event'],
             'optional': ['connection']
         },
 
         'datatable': {
             'type': 'js',
-            'path': 'datatable/datatable-beta-min.js',
+            'path': 'datatable/datatable-min.js',
             'requires': ['element', 'datasource'],
-            'optional': ['calendar', 'dragdrop'],
+            'optional': ['calendar', 'dragdrop', 'paginator'],
             'skinnable': true
+        },
+
+        'datemath': {
+            'type': 'js',
+            'path': 'datemath/datemath-min.js',
+            'requires': ['yahoo']
         },
 
         'dom': {
@@ -120,22 +144,49 @@ BEGIN {
 
         'editor': {
             'type': 'js',
-            'path': 'editor/editor-beta-min.js',
+            'path': 'editor/editor-min.js',
             'requires': ['menu', 'element', 'button'],
             'optional': ['animation', 'dragdrop'],
+            'supersedes': ['simpleeditor'],
             'skinnable': true
         },
 
         'element': {
             'type': 'js',
-            'path': 'element/element-beta-min.js',
-            'requires': ['dom', 'event']
+            'path': 'element/element-min.js',
+            'requires': ['dom', 'event'],
+            'optional': ['event-mouseenter', 'event-delegate']
+        },
+
+        'element-delegate': {
+            'type': 'js',
+            'path': 'element-delegate/element-delegate-min.js',
+            'requires': ['element']
         },
 
         'event': {
             'type': 'js',
             'path': 'event/event-min.js',
             'requires': ['yahoo']
+        },
+
+        'event-simulate': {
+            'type': 'js',
+            'path': 'event-simulate/event-simulate-min.js',
+            'requires': ['event']
+        },
+
+        'event-delegate': {
+            'type': 'js',
+            'path': 'event-delegate/event-delegate-min.js',
+            'requires': ['event'],
+            'optional': ['selector']
+        },
+
+        'event-mouseenter': {
+            'type': 'js',
+            'path': 'event-mouseenter/event-mouseenter-min.js',
+            'requires': ['dom', 'event']
         },
 
         'fonts': {
@@ -164,8 +215,8 @@ BEGIN {
 
          'imagecropper': {
              'type': 'js',
-             'path': 'imagecropper/imagecropper-beta-min.js',
-             'requires': ['dom', 'event', 'dragdrop', 'element', 'resize'],
+             'path': 'imagecropper/imagecropper-min.js',
+             'requires': ['dragdrop', 'element', 'resize'],
              'skinnable': true
          },
 
@@ -183,8 +234,8 @@ BEGIN {
 
          'layout': {
              'type': 'js',
-             'path': 'layout/layout-beta-min.js',
-             'requires': ['dom', 'event', 'element'],
+             'path': 'layout/layout-min.js',
+             'requires': ['element'],
              'optional': ['animation', 'dragdrop', 'resize', 'selector'],
              'skinnable': true
          }, 
@@ -203,26 +254,32 @@ BEGIN {
             'requires': ['containercore'],
             'skinnable': true
         },
-    
+
         'paginator': {
             'type': 'js',
             'path': 'paginator/paginator-min.js',
-            'requires': ['event', 'element'],
-            'optional': ['selector'],
+            'requires': ['element'],
             'skinnable': true
         },
 
         'profiler': {
             'type': 'js',
-            'path': 'profiler/profiler-beta-min.js',
+            'path': 'profiler/profiler-min.js',
             'requires': ['yahoo']
         },
 
-
         'profilerviewer': {
             'type': 'js',
-            'path': 'profilerviewer/profilerviewer-beta-min.js',
+            'path': 'profilerviewer/profilerviewer-min.js',
             'requires': ['profiler', 'yuiloader', 'element'],
+            'skinnable': true
+        },
+
+        'progressbar': {
+            'type': 'js',
+            'path': 'progressbar/progressbar-min.js',
+            'requires': ['element'],
+            'optional': ['animation'],
             'skinnable': true
         },
 
@@ -247,21 +304,21 @@ BEGIN {
 
          'resize': {
              'type': 'js',
-             'path': 'resize/resize-beta-min.js',
-             'requires': ['dom', 'event', 'dragdrop', 'element'],
+             'path': 'resize/resize-min.js',
+             'requires': ['dragdrop', 'element'],
              'optional': ['animation'],
              'skinnable': true
          },
 
         'selector': {
             'type': 'js',
-            'path': 'selector/selector-beta-min.js',
+            'path': 'selector/selector-min.js',
             'requires': ['yahoo', 'dom']
         },
 
         'simpleeditor': {
             'type': 'js',
-            'path': 'editor/simpleeditor-beta-min.js',
+            'path': 'editor/simpleeditor-min.js',
             'requires': ['element'],
             'optional': ['containercore', 'menu', 'button', 'animation', 'dragdrop'],
             'skinnable': true,
@@ -272,7 +329,40 @@ BEGIN {
             'type': 'js',
             'path': 'slider/slider-min.js',
             'requires': ['dragdrop'],
-            'optional': ['animation']
+            'optional': ['animation'],
+            'skinnable': true
+        },
+
+        'storage': {
+            'type': 'js',
+            'path': 'storage/storage-min.js',
+            'requires': ['yahoo', 'event', 'cookie'],
+            'optional': ['swfstore']
+        },
+
+         'stylesheet': {
+            'type': 'js',
+            'path': 'stylesheet/stylesheet-min.js',
+            'requires': ['yahoo']
+         },
+
+        'swf': {
+            'type': 'js',
+            'path': 'swf/swf-min.js',
+            'requires': ['element'],
+            'supersedes': ['swfdetect']
+        },
+
+        'swfdetect': {
+            'type': 'js',
+            'path': 'swfdetect/swfdetect-min.js',
+            'requires': ['yahoo']
+        },
+
+        'swfstore': {
+            'type': 'js',
+            'path': 'swfstore/swfstore-min.js',
+            'requires': ['element', 'cookie', 'swf']
         },
 
         'tabview': {
@@ -286,14 +376,15 @@ BEGIN {
         'treeview': {
             'type': 'js',
             'path': 'treeview/treeview-min.js',
-            'requires': ['event'],
+            'requires': ['event', 'dom'],
+            'optional': ['json', 'animation', 'calendar'],
             'skinnable': true
         },
 
         'uploader': {
             'type': 'js',
-            'path': 'uploader/uploader-experimental.js',
-            'requires': ['yahoo', 'dom', 'event', 'element']
+            'path': 'uploader/uploader-min.js',
+            'requires': ['element']
         },
 
         'utilities': {
@@ -317,7 +408,7 @@ BEGIN {
 
         'yuiloader': {
             'type': 'js',
-            'path': 'yuiloader/yuiloader-beta-min.js',
+            'path': 'yuiloader/yuiloader-min.js',
             'supersedes': ['yahoo', 'get']
         },
 
@@ -332,8 +423,9 @@ BEGIN {
             'type': 'js',
             'path': 'yuitest/yuitest-min.js',
             'requires': ['logger'],
+            'optional': ['event-simulate'],
             'skinnable': true
-        },
+        }
 }
 _END_
 
@@ -389,25 +481,28 @@ _END_
 }
 _END_
 
-    while (my ($name, $value) = each %$catalog) {
-        next unless $value->{skinnable};
-        $catalog->{"$name-skin"} = {
-            type => "css",
-            path => "$name/assets/skins/sam/$name.css",
-        };
-        $catalog_meta->{"$name-skin"} = {
-            type => "css",
-            name => "Sam Skin for $name",
-        };
+    if ( 0 ) {
+        # FIXME I don't think we need this anymore
+        while (my ($name, $value) = each %$catalog) {
+            next unless $value->{skinnable};
+            $catalog->{"$name-skin"} = {
+                type => "css",
+                path => "$name/assets/skins/sam/$name.css",
+            };
+            $catalog_meta->{"$name-skin"} = {
+                type => "css",
+                name => "Sam Skin for $name",
+            };
+        }
     }
 
     my %catalog;
     my %dependency_graph;
     for my $entry (keys %$catalog) {
         $dependency_graph{$entry} = [ @{ $catalog->{$entry}->{requires} || [] } ];
-        $catalog{$entry} = YUI::Loader::Entry->parse($entry => $catalog->{$entry});
-        $catalog{$entry}->kind($catalog_meta->{$entry}->{type});
-        $catalog{$entry}->description($catalog_meta->{$entry}->{name});
+        $catalog{$entry} = YUI::Loader::Entry->parse( $entry => $catalog->{$entry} );
+        $catalog{$entry}->kind( $catalog_meta->{$entry}->{type} || $catalog->{$entry}->{type} );
+        $catalog{$entry}->description( $catalog_meta->{$entry}->{name} || $entry );
     }
     $catalog{'reset'}->rank(-300);
     $catalog{'reset-fonts'}->rank(-20);

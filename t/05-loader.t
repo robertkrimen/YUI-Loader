@@ -33,5 +33,5 @@ ok(YUI::Loader->new_from_dir(base => "./"));
 ok(YUI::Loader->new_from_yui_dir(dir => "./"));
 ok(YUI::Loader->new_from_dir(dir => "./"));
 
-is(YUI::Loader->new_from_yui_dir(dir => "./yui/\%v/build")->source->base, "yui/2.5.1/build");
+is(YUI::Loader->new_from_yui_dir(dir => "./yui/\%v/build")->source->base, "yui/2.8.1/build");
 

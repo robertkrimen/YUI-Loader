@@ -20,4 +20,4 @@ $loader->clear;
 $loader->include->imagecropper;
 cmp_deeply([ $loader->list->name ], [qw{ resize-skin imagecropper-skin yahoo dom event dragdrop element resize imagecropper }]);
 cmp_deeply([ map { "$_" } $loader->list->item_path ],
-    [qw{ resize/assets/skins/sam/resize.css imagecropper/assets/skins/sam/imagecropper.css yahoo/yahoo.js dom/dom.js event/event.js dragdrop/dragdrop.js element/element-beta.js resize/resize-beta.js imagecropper/imagecropper-beta.js }]);
+    [qw{ resize/assets/skins/sam/resize.css imagecropper/assets/skins/sam/imagecropper.css yahoo/yahoo.js dom/dom.js event/event.js dragdrop/dragdrop.js element/element.js resize/resize.js imagecropper/imagecropper.js }]);

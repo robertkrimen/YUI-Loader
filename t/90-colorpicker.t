@@ -19,7 +19,7 @@ is($loader->html."\n", <<_END_);
 <script src="http://yui.yahooapis.com/2.5.1/build/dom/dom.js" type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/2.5.1/build/event/event.js" type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/2.5.1/build/dragdrop/dragdrop.js" type="text/javascript"></script>
-<script src="http://yui.yahooapis.com/2.5.1/build/element/element-beta.js" type="text/javascript"></script>
+<script src="http://yui.yahooapis.com/2.5.1/build/element/element.js" type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/2.5.1/build/slider/slider.js" type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/2.5.1/build/colorpicker/colorpicker.js" type="text/javascript"></script>
 _END_

@@ -14,11 +14,11 @@ cmp_deeply([ $catalog->name_list ], superbagof(qw/reset base container container
 ok($catalog->entry("yuitest"));
 
 is($catalog->entry("yuitest")->file, "yuitest.js");
-is($catalog->entry("imagecropper")->file, "imagecropper-beta.js");
+is($catalog->entry("imagecropper")->file, "imagecropper.js");
 
 is($catalog->item([qw/yuitest/])->file, "yuitest.js");
 is($catalog->item([qw/yuitest min/])->file, "yuitest-min.js");
 is($catalog->item([qw/yuitest debug/])->file, "yuitest-debug.js");
-is($catalog->item([qw/imagecropper/])->file, "imagecropper-beta.js");
-is($catalog->item([qw/imagecropper min/])->file, "imagecropper-beta-min.js");
-is($catalog->item([qw/imagecropper debug/])->file, "imagecropper-beta-debug.js");
+is($catalog->item([qw/imagecropper/])->file, "imagecropper.js");
+is($catalog->item([qw/imagecropper min/])->file, "imagecropper-min.js");
+is($catalog->item([qw/imagecropper debug/])->file, "imagecropper-debug.js");

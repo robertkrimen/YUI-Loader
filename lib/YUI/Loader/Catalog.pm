@@ -23,7 +23,7 @@ BEGIN {
         'autocomplete': {
             'type': 'js',
             'path': 'autocomplete/autocomplete-min.js',
-            'requires': ['dom', 'event'],
+            'requires': ['dom', 'event', 'datasource'],
             'optional': ['connection', 'animation'],
             'skinnable': true
         },
@@ -51,7 +51,7 @@ BEGIN {
 
         'charts': {
             'type': 'js',
-            'path': 'charts/charts-experimental-min.js',
+            'path': 'charts/charts-min.js',
             'requires': ['element', 'json', 'datasource']
         },
 
@@ -87,20 +87,20 @@ BEGIN {
 
         'cookie': {
             'type': 'js',
-            'path': 'cookie/cookie-beta-min.js',
+            'path': 'cookie/cookie-min.js',
             'requires': ['yahoo']
         },
 
         'datasource': {
             'type': 'js',
-            'path': 'datasource/datasource-beta-min.js',
+            'path': 'datasource/datasource-min.js',
             'requires': ['event'],
             'optional': ['connection']
         },
 
         'datatable': {
             'type': 'js',
-            'path': 'datatable/datatable-beta-min.js',
+            'path': 'datatable/datatable-min.js',
             'requires': ['element', 'datasource'],
             'optional': ['calendar', 'dragdrop'],
             'skinnable': true
@@ -120,7 +120,7 @@ BEGIN {
 
         'editor': {
             'type': 'js',
-            'path': 'editor/editor-beta-min.js',
+            'path': 'editor/editor-min.js',
             'requires': ['menu', 'element', 'button'],
             'optional': ['animation', 'dragdrop'],
             'skinnable': true
@@ -128,7 +128,7 @@ BEGIN {
 
         'element': {
             'type': 'js',
-            'path': 'element/element-beta-min.js',
+            'path': 'element/element-min.js',
             'requires': ['dom', 'event']
         },
 
@@ -164,7 +164,7 @@ BEGIN {
 
          'imagecropper': {
              'type': 'js',
-             'path': 'imagecropper/imagecropper-beta-min.js',
+             'path': 'imagecropper/imagecropper-min.js',
              'requires': ['dom', 'event', 'dragdrop', 'element', 'resize'],
              'skinnable': true
          },
@@ -183,7 +183,7 @@ BEGIN {
 
          'layout': {
              'type': 'js',
-             'path': 'layout/layout-beta-min.js',
+             'path': 'layout/layout-min.js',
              'requires': ['dom', 'event', 'element'],
              'optional': ['animation', 'dragdrop', 'resize', 'selector'],
              'skinnable': true
@@ -206,14 +206,14 @@ BEGIN {
 
         'profiler': {
             'type': 'js',
-            'path': 'profiler/profiler-beta-min.js',
+            'path': 'profiler/profiler-min.js',
             'requires': ['yahoo']
         },
 
 
         'profilerviewer': {
             'type': 'js',
-            'path': 'profilerviewer/profilerviewer-beta-min.js',
+            'path': 'profilerviewer/profilerviewer-min.js',
             'requires': ['profiler', 'yuiloader', 'element'],
             'skinnable': true
         },
@@ -239,7 +239,7 @@ BEGIN {
 
          'resize': {
              'type': 'js',
-             'path': 'resize/resize-beta-min.js',
+             'path': 'resize/resize-min.js',
              'requires': ['dom', 'event', 'dragdrop', 'element'],
              'optional': ['animation'],
              'skinnable': true
@@ -247,13 +247,13 @@ BEGIN {
 
         'selector': {
             'type': 'js',
-            'path': 'selector/selector-beta-min.js',
+            'path': 'selector/selector-min.js',
             'requires': ['yahoo', 'dom']
         },
 
         'simpleeditor': {
             'type': 'js',
-            'path': 'editor/simpleeditor-beta-min.js',
+            'path': 'editor/simpleeditor-min.js',
             'requires': ['element'],
             'optional': ['containercore', 'menu', 'button', 'animation', 'dragdrop'],
             'skinnable': true,
@@ -284,8 +284,8 @@ BEGIN {
 
         'uploader': {
             'type': 'js',
-            'path': 'uploader/uploader-experimental.js',
-            'requires': ['yahoo']
+            'path': 'uploader/uploader.js',
+            'requires': ['yahoo', 'dom', 'event', 'element']
         },
 
         'utilities': {
@@ -309,7 +309,7 @@ BEGIN {
 
         'yuiloader': {
             'type': 'js',
-            'path': 'yuiloader/yuiloader-beta-min.js',
+            'path': 'yuiloader/yuiloader-min.js',
             'supersedes': ['yahoo', 'get']
         },
 
@@ -325,7 +325,15 @@ BEGIN {
             'path': 'yuitest/yuitest-min.js',
             'requires': ['logger'],
             'skinnable': true
-        }
+        },
+
+	'paginator': {
+		'type': 'js',
+		'path': 'paginator/paginator-min.js',
+		'requires': ['event', 'element'],
+		'optional': ['selector'],
+		'skinnable': true
+	}
 }
 _END_
 
@@ -376,7 +384,8 @@ _END_
     "reset-fonts-grids":{name:"reset-fonts-grids.css", type: "rollup"},
     "utilities":{name:"utilities.js", type: "rollup"},
     "yahoo-dom-event":{name:"yahoo-dom-event.js", type: "rollup"},
-    "yuiloader-dom-event":{name:"yuiloader-dom-event.js", type: "rollup"}
+    "yuiloader-dom-event":{name:"yuiloader-dom-event.js", type: "rollup"},
+    "paginator":{name:"Paginator Control", type: "widget"}
 }
 _END_
 
